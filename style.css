@@ -12,7 +12,7 @@ body {
     line-height: 1.6;
     overflow-x: hidden; /* Prevent horizontal scroll due to canvas */
     position: relative; /* For absolute positioning of canvas */
-    cursor: none; /* Hide default cursor */
+    cursor: none; /* Hide default cursor to use custom one */
 }
 
 /* Background Overlay for subtle gradient */
@@ -27,7 +27,7 @@ body {
 }
 
 /* Canvas for the dynamic plasma/spiral effect */
-canvas#plasmaCanvas {
+canvas#quantumPlasmaCanvas { /* Renamed ID to avoid conflict and reflect new effect */
     position: fixed;
     top: 0;
     left: 0;
@@ -60,11 +60,27 @@ nav {
     padding: 0 2rem;
 }
 
-.logo {
-    /* Placeholder for actual stylized aUSD logo image */
-    height: 40px; /* Adjust as needed */
-    width: auto;
+.logo-link {
+    display: block; /* Make the whole logo area clickable */
+    text-decoration: none;
 }
+
+.header-logo {
+    /* This div will hold the aUSD logo using background-image for styling */
+    width: 120px; /* Adjust size for the image logo */
+    height: 60px; /* Adjust size for the image logo */
+    background-image: url('assets/aUSD_logo.png'); /* You will need to create this image and put it in an 'assets' folder */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.7)) drop-shadow(0 0 30px rgba(255, 0, 255, 0.5)); /* Neon glow for the image */
+    transition: filter 0.3s ease;
+}
+
+.header-logo:hover {
+    filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.9)) drop-shadow(0 0 40px rgba(255, 0, 255, 0.7));
+}
+
 
 nav ul {
     list-style: none;
@@ -123,6 +139,7 @@ main {
 }
 
 .section-content p {
+    font-family: 'Electrolize', sans-serif; /* A more digital/techy font for content */
     font-size: 1.1rem;
     margin-bottom: 1.5rem;
     color: #c0c0c0;
@@ -137,6 +154,7 @@ main {
     margin-bottom: 1rem;
     text-shadow: 0 0 8px #8a2be2;
     text-align: left; /* Align subheadings to left */
+    text-transform: uppercase;
 }
 
 .section-content ul {
@@ -153,6 +171,7 @@ main {
     margin-bottom: 0.8rem;
     color: #b0b0b0;
     font-size: 1rem;
+    font-family: 'Electrolize', sans-serif;
 }
 
 
@@ -160,6 +179,7 @@ main {
 .hero-section {
     min-height: 100vh;
     display: flex;
+    flex-direction: column; /* Align items vertically */
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -169,12 +189,27 @@ main {
 }
 
 .hero-title {
-    font-size: 4.5rem;
-    font-family: 'Orbitron', sans-serif;
-    color: #ff00ff; /* Bright magenta for impact */
-    text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff, 0 0 60px rgba(255, 0, 255, 0.7);
-    margin-bottom: 1rem;
+    /* Removed from here, moved to background image or dynamic logo */
+    display: none; /* Hide the text title */
 }
+
+/* Main logo (for hero section) */
+.main-logo {
+    width: 500px; /* Adjust size as needed */
+    height: 250px; /* Adjust size as needed */
+    background-image: url('assets/aUSD_logo_full.png'); /* You will need to create this image and put it in an 'assets' folder */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 0 30px rgba(138, 43, 226, 0.9)) drop-shadow(0 0 60px rgba(255, 0, 255, 0.7)); /* Intense neon glow */
+    margin-bottom: 2rem;
+    transition: filter 0.5s ease;
+}
+
+.main-logo:hover {
+    filter: drop-shadow(0 0 40px rgba(138, 43, 226, 1)) drop-shadow(0 0 80px rgba(255, 0, 255, 0.9));
+}
+
 
 .hero-subtitle {
     font-size: 1.5rem;
@@ -183,6 +218,7 @@ main {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    font-family: 'Electrolize', sans-serif; /* Digital font */
 }
 
 .cta-buttons .btn {
@@ -214,15 +250,17 @@ main {
 
 .btn.secondary-btn {
     background-color: transparent;
-    color: #d0bfff;
-    border-color: #d0bfff;
+    color: #00ffff; /* Cyan for secondary to match digital feel */
+    border-color: #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
 }
 
 .btn.secondary-btn:hover {
-    background-color: rgba(208, 191, 255, 0.1);
+    background-color: rgba(0, 255, 255, 0.1);
     color: #fff;
     border-color: #fff;
     transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
 }
 
 /* Roadmap Grid */
@@ -258,6 +296,7 @@ main {
 .roadmap-item p {
     font-size: 1rem;
     color: #a0a0a0;
+    font-family: 'Electrolize', sans-serif;
 }
 
 /* Footer */
@@ -269,6 +308,7 @@ footer {
     font-size: 0.9rem;
     margin-top: 4rem;
     border-top: 1px solid rgba(138, 43, 226, 0.1);
+    font-family: 'Electrolize', sans-serif;
 }
 
 footer p {
@@ -286,40 +326,12 @@ footer p {
     color: #8a2be2;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    nav {
-        flex-direction: column;
-    }
-    nav ul {
-        margin-top: 1rem;
-    }
-    nav ul li {
-        margin: 0 0.8rem;
-    }
-    .hero-title {
-        font-size: 3rem;
-    }
-    .hero-subtitle {
-        font-size: 1.2rem;
-    }
-    .section-title {
-        font-size: 2rem;
-    }
-    .cta-buttons .btn {
-        display: block;
-        margin: 1rem auto;
-    }
-}
-
-/* Specific styling for the aUSD text logo to match the generated image aesthetic */
-.logo-img {
-    height: 60px; /* Adjust size for the image logo */
-    width: auto;
-    filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.7)) drop-shadow(0 0 30px rgba(255, 0, 255, 0.5)); /* Neon glow for the image */
-}
-
 /* Mining Section Styles */
+#mining {
+    /* Removed from main page, will be a separate HTML file or dynamic load */
+    display: none; /* Hide by default, will be loaded or navigated to */
+}
+
 .mining-dashboard, .wallet-connect, .ido-controls {
     background-color: rgba(40, 0, 80, 0.7);
     padding: 2rem;
@@ -329,7 +341,7 @@ footer p {
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
 }
 
-.mining-stats p, .ido-controls p, .status-message {
+.mining-stats p, .ido-controls p, .status-message, .ido-limit-info {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.2rem;
     color: #00ffff; /* Cyan for stats */
@@ -351,6 +363,8 @@ footer p {
     background-color: #5d359b; /* Slightly different purple for wallet buttons */
     border-color: #5d359b;
     color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
 }
 .wallet-btn:hover {
     background-color: #6a40a5;
@@ -368,12 +382,34 @@ input[type="number"] {
     max-width: 300px;
     margin-top: 1rem;
     text-align: center;
+    font-family: 'Electrolize', sans-serif;
 }
 input[type="number"]::placeholder {
     color: #a0a0a0;
 }
 .status-message {
     font-size: 1rem;
-    color: #d0bfff;
+    color: #00ffff; /* Cyan for status messages */
     margin-top: 1rem;
+    font-family: 'Electrolize', sans-serif;
+}
+
+.ido-limit-info {
+    font-size: 1.1rem;
+    color: #d0bfff; /* Lighter purple for important info */
+    margin-bottom: 1.5rem;
+    font-family: 'Electrolize', sans-serif;
+}
+
+/* Whitepaper section adjustments */
+#whitepaper .btn {
+    background-color: #00ffff; /* Cyan button for whitepaper */
+    border-color: #00ffff;
+    color: #0d0d1a; /* Dark text for contrast */
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+#whitepaper .btn:hover {
+    background-color: #00e0e0;
+    border-color: #00e0e0;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
 }
