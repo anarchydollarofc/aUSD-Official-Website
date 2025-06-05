@@ -11,7 +11,9 @@
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon"> </head>
 <body>
     <div class="background-overlay"></div>
-    <canvas id="quantumPlasmaCanvas"></canvas> <header>
+    <canvas id="quantumPlasmaCanvas"></canvas> 
+
+    <header>
         <nav>
             <a href="#home" class="logo-link">
                 <div class="header-logo-text" data-text="aUSD">aUSD</div>
@@ -124,27 +126,27 @@
             <div class="section-content">
                 <p>Experience the next frontier of decentralized wealth generation with aUSD Quantum Mining. Our innovative, energy-efficient protocol simulates the computational process of asset discovery, rewarding active participants with newly minted aUSD. This isn't just mining; it's a strategic allocation of sovereignty, directly contributing to the decentralized fabric of the Anarchy Dollar ecosystem.</p>
                 
-                <h3>Connect Your Quantum Wallet to Begin Your Quantum Mining Journey:</h3>
+                <h3>Initiate Quantum Mining Protocol:</h3>
+                <p class="mining-status-text">Connect your X profile to begin your Quantum Mining journey.</p>
                 <div class="wallet-connect">
-                    <button class="btn wallet-btn" id="connectPhantomBtn" data-wallet="phantom">Connect Phantom</button>
-                    <button class="btn wallet-btn" id="connectSolflareBtn" data-wallet="solflare">Connect Solflare</button>
-                    <button class="btn wallet-btn" id="connectBackpackBtn" data-wallet="backpack">Connect Backpack</button>
+                    <button class="btn wallet-btn" id="connectXBtn" data-wallet="x">Connect X Profile</button>
                     <p id="walletStatus" class="status-message"></p>
                 </div>
                 
                 <div class="mining-dashboard">
+                    <p class="user-profile-display"><span id="xUsernameDisplay"></span></p>
                     <div class="mining-stats">
                         <p>Current Mining Rate: <span id="miningRate">0.0000000 aUSD/sec</span></p>
                         <p>Total Mined: <span id="totalMined">0.0000000 aUSD</span></p>
                     </div>
                     <div class="mining-controls">
-                        <button id="startMiningBtn" class="btn primary-btn" disabled>Start Quantum Mining</button>
+                        <button id="startMiningBtn" class="btn primary-btn" disabled>Activate Quantum Mining</button>
                     </div>
                 </div>
 
                 <h3>Referral Protocol: Amplify Your Anarchy</h3>
                 <p>Expand your mining yield through the Anarchy Referral Protocol. Share your unique referral link to onboard new participants, and receive a bonus multiplier on your mining rate as your network grows. This is a testament to true decentralized community building, where collective effort directly amplifies individual sovereignty.</p>
-                <p class="referral-link-display">Your Referral Link: <span id="referralLink">Connect wallet to generate referral link</span></p>
+                <p class="referral-link-display">Your Referral Link: <span id="referralLink">Connect X Profile to generate referral link</span></p>
                 
             </div>
         </section>
@@ -170,9 +172,8 @@
                 
                 <div class="whitepaper-sections" id="whitepaperSections">
                     <h3>1. Introduction: The Crisis of Centralized Value</h3>
-                    <p>The prevailing global financial infrastructure, characterized by centralized control and opaque monetary policies, inherently undermines individual economic autonomy. Traditional stablecoins, tethered to unstable fiat reserves or susceptible to algorithmic vulnerabilities, perpetuate this systemic fragility. aUSD emerges as a radical counter-narrative, offering a cryptographically secured alternative that redefines stability through decentralized consensus and community-driven immutability. Our protocol addresses the critical need for a truly censorship-resistant and privately transactable digital medium of exchange.</p>
-                    <a href="#" class="read-more-toggle" data-target="whitepaperSection1">Read More...</a>
-                    <div id="whitepaperSection1" class="whitepaper-hidden-content">
+                    <p>The prevailing global financial infrastructure, characterized by centralized control and opaque monetary policies, inherently undermines individual economic autonomy. Traditional stablecoins, tethered to unstable fiat reserves or susceptible to algorithmic vulnerabilities, perpetuate this systemic fragility. aUSD emerges as a radical counter-narrative, offering a cryptographically secured alternative that rede fines stability through decentralized consensus and community-driven immutability. Our protocol addresses the critical need for a truly censorship-resistant and privately transactable digital medium of exchange.</p>
+                    <div id="whitepaperSection1" class="whitepaper-expandable-content">
                         <p><strong>1.1 The Fiat Delusion:</strong> Global fiat currencies are subject to inflationary pressures and geopolitical manipulation, eroding purchasing power and fostering economic instability. The illusion of stability is maintained through centralized entities wielding unchecked power.</p>
                         <p><strong>1.2 Algorithmic Precarity:</strong> Prior attempts at algorithmic stablecoins often succumbed to market volatility, revealing fundamental design flaws in their pseudo-decentralized constructs. Their reliance on external market dynamics for stability proved inherently unsustainable.</p>
                         <p><strong>1.3 The Sovereign Imperative:</strong> True financial sovereignty necessitates a currency insulated from external control, impervious to arbitrary censorship, and immune to inflationary erosion. aUSD is precisely this imperative made manifest through a quantum-resistant cryptographic framework.</p>
@@ -180,8 +181,7 @@
 
                     <h3>2. The Anarchy Protocol: Quantum-Resistant Consensus</h3>
                     <p>At the heart of aUSD's unparalleled resilience lies the Anarchy Protocol, a breakthrough in decentralized consensus theory. It transcends conventional Proof-of-Stake by integrating a unique BFT derivative and a proprietary 'Temporal Flux' algorithm.</p>
-                    <a href="#" class="read-more-toggle" data-target="whitepaperSection2">Read More...</a>
-                    <div id="whitepaperSection2" class="whitepaper-hidden-content">
+                    <div id="whitepaperSection2" class="whitepaper-expandable-content">
                         <p><strong>2.1 Temporal Flux Algorithm:</strong> This proprietary algorithm dynamically adjusts transaction validation windows based on real-time network entropy and node participation metrics, significantly mitigating latency and optimizing throughput. This enables sub-second finality even under extreme adversarial conditions.</p>
                         <p><strong>2.2 BFT Synergies:</strong> Our Byzantine Fault Tolerance implementation is optimized for high-throughput environments, ensuring network integrity and preventing malicious state transitions even if a significant percentage of validators are compromised. This is paramount for censorship resistance.</p>
                         <p><strong>2.3 Quantum-Resistant Primitives:</strong> All cryptographic signatures and hashing functions within the Anarchy Protocol are constructed using post-quantum cryptographic primitives, ensuring aUSD's long-term security against future quantum computing advancements. This foresight future-proofs the ecosystem against existential threats.</p>
@@ -189,8 +189,7 @@
 
                     <h3>3. Tokenomics: The Economic Singularity</h3>
                     <p>The aUSD tokenomics model is meticulously crafted to ensure immutable stability and community empowerment. It operates on a fixed total supply, coupled with a novel fee mechanism that autonomously redistributes value and fosters deflationary pressure.</p>
-                    <a href="#" class="read-more-toggle" data-target="whitepaperSection3">Read More...</a>
-                    <div id="whitepaperSection3" class="whitepaper-hidden-content">
+                    <div id="whitepaperSection3" class="whitepaper-expandable-content">
                         <p><strong>3.1 Fixed Supply Doctrine:</strong> With a rigid total supply of 1,000,000,000 aUSD, our protocol eliminates inflationary dilution, protecting value for holders and fostering long-term economic confidence. No more printing money out of thin air.</p>
                         <p><strong>3.2 Quantum Velocity Protocol (QVP) Fees:</strong> A micro-transaction fee (0.001%-0.005%) is levied on all aUSD transfers. This fee is instantly redistributed:</p>
                         <ul>
@@ -202,9 +201,8 @@
                     </div>
 
                     <h3>4. Staking: The Nexus of Sovereignty and Yield</h3>
-                    <p>The aUSD Staking Protocol transcends conventional yield generation, offering a symbiotic relationship between active participation and network security. Our tiered yield structure rewards long-term commitment and contributes to protocol stability.</p>
-                    <a href="#" class="read-more-toggle" data-target="whitepaperSection4">Read More...</a>
-                    <div id="whitepaperSection4" class="whitepaper-hidden-content">
+                    <p>The aUSD Staking Protocol is designed to reward active participation and long-term commitment to the Anarchy Dollar ecosystem, offering a symbiotic relationship between yield generation and network security. Our staking mechanism is a testament to sustainable economics, avoiding the hyper-inflationary pitfalls of many nascent protocols.</p>
+                    <div id="whitepaperSection4" class="whitepaper-expandable-content">
                         <p><strong>4.1 Dynamic APY Generation:</strong> Participants can earn 12% to 18% APY, algorithmically adjusted based on network activity and staking pool utilization. This ensures sustainable and attractive returns without compromising tokenomics.</p>
                         <p><strong>4.2 Tiered Participation:</strong> Incentivizing commitment, higher APYs are awarded for longer lock-up periods:</p>
                         <ul>
@@ -217,13 +215,13 @@
 
                     <h3>5. Quantum Mining: Digital Alchemy Redefined</h3>
                     <p>aUSD Quantum Mining is not traditional proof-of-work; it's an energy-efficient simulation of computational asset discovery, rewarding active participants. This strategic allocation of sovereignty directly contributes to the decentralized fabric of the Anarchy Dollar ecosystem.</p>
-                    <a href="#" class="read-more-toggle" data-target="whitepaperSection5">Read More...</a>
-                    <div id="whitepaperSection5" class="whitepaper-hidden-content">
+                    <div id="whitepaperSection5" class="whitepaper-expandable-content">
                         <p><strong>5.1 Algorithmic Discovery Protocol:</strong> Participants engage in a simulated computational process, mimicking cryptographic challenges to generate aUSD rewards. This process is entirely front-end simulated for user engagement and to avoid energy consumption.</p>
                         <p><strong>5.2 Referral Nexus Protocol:</strong> Amplify your mining yield by expanding the aUSD network. Refer new participants and receive a bonus multiplier on your mining rate, fostering viral adoption and decentralized community growth.</p>
                         <p><strong>5.3 Strategic Re-activation:</strong> To ensure optimal network engagement and prevent idle resource allocation, quantum mining protocols require re-activation every 6 hours. This incentivizes continuous interaction with the aUSD ecosystem.</p>
                     </div>
                 </div>
+                <button class="btn primary-btn" id="whitepaperToggleAll">Read Full Whitepaper</button>
             </div>
         </section>
     </main>

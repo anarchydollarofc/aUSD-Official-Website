@@ -2,24 +2,24 @@ import { Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } f
 import { getAssociatedTokenAddress, createTransferInstruction, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('quantumPlasmaCanvas'); // Changed ID to match HTML
+    const canvas = document.getElementById('quantumPlasmaCanvas');
     const ctx = canvas.getContext('2d');
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let particles = [];
-    const maxParticles = 600; // Increased for more density and smoother trails
+    const maxParticles = 700; // Increased for more density and smoother trails
     let isMouseMoving = false;
     let mouseMoveTimer;
     let lastPulseTime = 0;
-    const pulseInterval = 1500; // Pulse every 1.5 seconds when idle
-    let currentTrailPoint = { x: mouseX, y: mouseY }; // Starting point for continuous trail
+    const pulseInterval = 1500; 
+    let currentTrailPoint = { x: mouseX, y: mouseY }; 
 
     // Set canvas size on load and resize
     const setCanvasSize = () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     };
-    setCanvasSize(); // Initial set
+    setCanvasSize(); 
     window.addEventListener('resize', setCanvasSize);
 
     // Mouse movement listener
@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(mouseMoveTimer);
         mouseMoveTimer = setTimeout(() => {
             isMouseMoving = false;
-            lastPulseTime = performance.now(); // Reset pulse timer when mouse stops
-        }, 150); // Consider mouse stopped if no movement for 150ms
+            lastPulseTime = performance.now(); 
+        }, 150); 
     });
 
     // Particle class for the digital lightning-like effects
@@ -42,24 +42,23 @@ document.addEventListener('DOMContentLoaded', () => {
             this.baseSize = Math.random() * 1.5 + 0.5;
             this.size = this.baseSize;
             this.color = color;
-            this.speedX = (Math.random() - 0.5) * 4 * speedMultiplier; // Faster initial burst
-            this.speedY = (Math.random() - 0.5) * 4 * speedMultiplier; // Faster initial burst
-            this.alpha = 1; // Start fully visible
+            this.speedX = (Math.random() - 0.5) * 5 * speedMultiplier; 
+            this.speedY = (Math.random() - 0.5) * 5 * speedMultiplier; 
+            this.alpha = 1; 
             this.life = 0;
-            this.maxLife = Math.random() * 70 + 40; // Adjusted life for smoother trails
+            this.maxLife = Math.random() * 80 + 60; 
         }
 
         update() {
             this.x += this.speedX;
             this.y += this.speedY;
-            this.alpha -= 1 / this.maxLife; // Fade out linearly
-            this.size = this.baseSize * (this.alpha > 0 ? this.alpha : 0); // Size reduces with alpha
+            this.alpha -= 1 / this.maxLife; 
+            this.size = this.baseSize * (this.alpha > 0 ? this.alpha : 0); 
             this.life++;
 
-            // Subtle direction change for digital "spark" feel
-            if (Math.random() < 0.05) { // Small chance to change direction
-                this.speedX += (Math.random() - 0.5) * 1;
-                this.speedY += (Math.random() - 0.5) * 1;
+            if (Math.random() < 0.07) { 
+                this.speedX += (Math.random() - 0.5) * 1.2;
+                this.speedY += (Math.random() - 0.5) * 1.2;
             }
         }
 
@@ -69,55 +68,48 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
-            ctx.globalAlpha = 1; // Reset alpha
+            ctx.globalAlpha = 1; 
         }
     }
 
     function animateQuantumPlasma() {
-        // Clear canvas with a very subtle fade out
-        ctx.fillStyle = 'rgba(13, 13, 26, 0.03)'; // Even more transparent for cleaner trails, almost no "scribble"
+        ctx.fillStyle = 'rgba(13, 13, 26, 0.02)'; // Even more transparent for clean trails
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Generate color from deep purple to light blue, subtly neon
         const timeFactor = performance.now() * 0.0005;
-        const baseHue = 270; // Purple base
-        const range = 120; // Towards blue (270 + 120 = 390 = 30 deg hue)
+        const baseHue = 270; 
+        const range = 120; 
         const hue = (baseHue + Math.sin(timeFactor) * range) % 360;
-        const color = `hsl(${hue}, 90%, 65%)`; // Vibrant, changing color
+        const color = `hsl(${hue}, 95%, 70%)`; // More vibrant, neon-like
 
-        // Update currentTrailPoint to smoothly follow mouse
-        currentTrailPoint.x += (mouseX - currentTrailPoint.x) * 0.2; // Faster follow, smoother
-        currentTrailPoint.y += (mouseY - currentTrailPoint.y) * 0.2;
+        currentTrailPoint.x += (mouseX - currentTrailPoint.x) * 0.25; // Faster, smoother follow
+        currentTrailPoint.y += (mouseY - currentTrailPoint.y) * 0.25;
 
-        // Draw the thick base line at the cursor tip
         ctx.strokeStyle = color;
-        ctx.lineWidth = 6; // Thicker line at the head for emphasis
+        ctx.lineWidth = 7; // Thicker line at the head
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(currentTrailPoint.x, currentTrailPoint.y);
-        ctx.lineTo(currentTrailPoint.x - (mouseX - currentTrailPoint.x) * 0.2, currentTrailPoint.y - (mouseY - currentTrailPoint.y) * 0.2); // Shorter, more defined segment
+        ctx.lineTo(currentTrailPoint.x - (mouseX - currentTrailPoint.x) * 0.15, currentTrailPoint.y - (mouseY - currentTrailPoint.y) * 0.15); // Shorter, more defined segment
         ctx.stroke();
 
-        // Emit fine lines/particles from the thick line's base spreading outwards
-        for (let i = 0; i < 10; i++) { // Even more fine lines for denser, lightning-like effect
+        for (let i = 0; i < 12; i++) { // Even more fine lines for denser, lightning-like effect
             const offsetAngle = Math.random() * Math.PI * 2;
-            const offsetDist = Math.random() * 20;
+            const offsetDist = Math.random() * 25;
             const px = currentTrailPoint.x + Math.cos(offsetAngle) * offsetDist;
             const py = currentTrailPoint.y + Math.sin(offsetAngle) * offsetDist;
-            particles.push(new Particle(px, py, color, isMouseMoving ? 3 : 1.5)); // Even faster, more spread when moving
+            particles.push(new Particle(px, py, color, isMouseMoving ? 4 : 2)); // Even faster, more spread when moving
         }
 
-        // When idle, emit particles in a pulsating spiral from the mouse position
         if (!isMouseMoving) {
             const pulseRadius = 50 + Math.sin((performance.now() - lastPulseTime) * 0.005) * 40;
             const pulseAngle = (performance.now() - lastPulseTime) * 0.008;
 
             const x = mouseX + Math.cos(pulseAngle) * pulseRadius;
             const y = mouseY + Math.sin(pulseAngle) * pulseRadius;
-            particles.push(new Particle(x, y, color, 1.2)); // Slightly faster particles for idle spiral
+            particles.push(new Particle(x, y, color, 1.5)); 
         }
         
-        // Update and draw existing particles
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
             particles[i].draw();
@@ -127,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Limit the total number of particles
         if (particles.length > maxParticles) {
             particles.splice(0, particles.length - maxParticles);
         }
@@ -138,142 +129,136 @@ document.addEventListener('DOMContentLoaded', () => {
     animateQuantumPlasma();
 
 
-    // --- REAL WALLET CONNECTION AND TRANSACTION LOGIC (for IDO) ---
-    // Make sure these are your actual addresses!
+    // --- Wallet / X Integration and Mining Logic ---
     const MY_RECEIVING_SOL_ADDRESS = new PublicKey("nxLHh8p2azzBJeuZCCRqSWoDA4h9ipGq6XumLVwmdYB"); // Your actual Solflare main wallet address (where SOL/USDC will go)
     const aUSD_MINT_ADDRESS_DEVNET = new PublicKey("57Xmt89NZHqf8zLFkPmQPu9KetsosEhzef3R2DUpSCjX"); // Your aUSD Token Mint Address
 
-    const connection = new Connection("https://api.devnet.solana.com", 'confirmed'); // Connect to Devnet
+    const connection = new Connection("https://api.devnet.solana.com", 'confirmed');
 
     const miningRateDisplay = document.getElementById('miningRate');
     const totalMinedDisplay = document.getElementById('totalMined');
     const startMiningBtn = document.getElementById('startMiningBtn');
-    const connectPhantomBtn = document.getElementById('connectPhantomBtn'); // Specific IDs for buttons
-    const connectSolflareBtn = document.getElementById('connectSolflareBtn');
-    const connectBackpackBtn = document.getElementById('connectBackpackBtn');
+    const connectXBtn = document.getElementById('connectXBtn'); // ID for Connect X Profile button
     const walletStatus = document.getElementById('walletStatus');
     const referralLinkDisplay = document.getElementById('referralLink');
     const idoAmountInput = document.getElementById('idoAmount');
     const buyaUSDBtn = document.getElementById('buyaUSDBtn');
     const idoStatus = document.getElementById('idoStatus');
-    const headerLogoText = document.querySelector('.header-logo-text'); // For the text logo
-    const mainLogoText = document.querySelector('.main-logo-text'); // For the main hero logo text
-    const whitepaperToggleBtns = document.querySelectorAll('.read-more-toggle'); // Whitepaper toggle buttons
+    const xUsernameDisplay = document.getElementById('xUsernameDisplay'); // Element to display X username
 
-    // Set data-text for header logo animation
-    if (headerLogoText) {
-        headerLogoText.setAttribute('data-text', headerLogoText.textContent);
+    // Whitepaper Toggle Logic
+    const whitepaperToggleAllBtn = document.getElementById('whitepaperToggleAll');
+    const whitepaperSectionsContainer = document.getElementById('whitepaperSections');
+
+    if (whitepaperToggleAllBtn) {
+        whitepaperToggleAllBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const allHiddenSections = whitepaperSectionsContainer.querySelectorAll('.whitepaper-expandable-content');
+            const isAnyHidden = Array.from(allHiddenSections).some(section => section.style.display === 'none' || section.style.display === '');
+
+            allHiddenSections.forEach(section => {
+                section.style.display = isAnyHidden ? 'block' : 'none';
+            });
+
+            whitepaperToggleAllBtn.textContent = isAnyHidden ? 'Read Less...' : 'Read Full Whitepaper';
+        });
     }
-    if (mainLogoText) {
-        mainLogoText.setAttribute('data-text', mainLogoText.textContent);
-    }
+
+    // Hide all whitepaper expandable content initially
+    whitepaperSectionsContainer.querySelectorAll('.whitepaper-expandable-content').forEach(section => {
+        section.style.display = 'none';
+    });
 
 
     let isMining = false;
-    let minedAmount = 0; // Simulated mined amount
-    let currentMiningRate = 0; // aUSD per second (simulated)
-    let userWalletPublicKey = null; // Stores connected wallet's public key
-    let referralMultiplier = 1.0; // Base multiplier for mining rate
+    let minedAmount = 0; 
+    let currentMiningRate = 0; 
+    let userXProfileConnected = false; // Tracks if X profile is connected
+    let xUsername = ''; // Stores X username
+    let referralMultiplier = 1.0; 
     let lastMiningActivationTime = 0;
     const MINING_REACTIVATION_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
-    const BASE_MINING_RATE_PER_SEC = 0.00005; // 0.00005 aUSD per second = ~4.32 aUSD per day
-    const REFERRAL_BONUS_PER_REFERRAL_UNIT = 0.00001; // Increase rate by this much per referral unit
+    const BASE_MINING_RATE_PER_SEC = 0.00005; 
+    const REFERRAL_BONUS_PER_REFERRAL_UNIT = 0.00001; 
 
-    // --- Wallet Connection Logic (Real Connection) ---
-    const getProvider = (walletType) => {
-        if (walletType === 'phantom' && window.phantom?.solana?.isPhantom) {
-            return window.phantom.solana;
-        } else if (walletType === 'solflare' && window.solflare?.isSolflare) {
-            return window.solflare;
-        } else if (walletType === 'backpack' && window.backpack?.solana?.isBackpack) {
-            return window.backpack.solana;
+    // --- X (Twitter) Connection Logic (Simulated for real data) ---
+    // This is a simulation. Real X OAuth requires a backend.
+    connectXBtn.addEventListener('click', async () => {
+        walletStatus.textContent = `Initiating Quantum Link with X Profile...`;
+        walletStatus.style.color = '#00ffff';
+
+        try {
+            // Simulate OAuth flow to get username
+            const fakeUsernames = ["@QuantumAnarchist", "@CipherMaestro", "@SolanaGuru", "@DarkWebKing", "@AUSD_Rebel"];
+            const selectedUsername = fakeUsernames[Math.floor(Math.random() * fakeUsernames.length)];
+            const fakeProfilePic = "https://via.placeholder.com/40"; // Placeholder for profile pic
+
+            xUsername = selectedUsername;
+            userXProfileConnected = true;
+            
+            xUsernameDisplay.innerHTML = `<img src="${fakeProfilePic}" alt="${xUsername} Profile Pic" class="x-profile-pic"> ${xUsername}`;
+            walletStatus.textContent = `Quantum Link Established! Connected to X as ${xUsername}.`;
+            walletStatus.style.color = '#00ff00';
+            
+            // Simulate referral link generation
+            referralLinkDisplay.textContent = `https://anarchydollar.com/mine?ref=${xUsername.replace('@', '')}`; // Use X username for referral code
+            
+            // Simulate referral bonus calculation (frontend only)
+            setTimeout(() => {
+                const simulatedReferrals = Math.floor(Math.random() * 5 + 1); 
+                referralMultiplier = 1.0 + simulatedReferrals * REFERRAL_BONUS_PER_REFERRAL_UNIT;
+                updateMiningRateDisplay();
+            }, 1000);
+
+            startMiningBtn.disabled = false; 
+
+        } catch (error) {
+            walletStatus.textContent = `Quantum Link Failed: ${error.message || 'Connection denied/failed.'}`;
+            walletStatus.style.color = '#ff0000';
+            userXProfileConnected = false;
+            startMiningBtn.disabled = true; 
         }
-        return null;
-    };
-
-    walletConnectBtns.forEach(button => {
-        button.addEventListener('click', async () => {
-            const walletType = button.dataset.wallet;
-            const provider = getProvider(walletType);
-
-            if (!provider) {
-                walletStatus.textContent = `Error: ${walletType} wallet not detected. Please install it.`;
-                walletStatus.style.color = '#ff0000';
-                return;
-            }
-
-            try {
-                walletStatus.textContent = `Initiating Quantum Link with ${walletType}...`;
-                walletStatus.style.color = '#00ffff';
-
-                const resp = await provider.connect();
-                userWalletPublicKey = resp.publicKey; // Store PublicKey object
-                
-                walletStatus.textContent = `Quantum Link Established! Connected to ${walletType}. Address: ${userWalletPublicKey.toBase58().substring(0, 6)}...${userWalletPublicKey.toBase58().slice(-6)}`;
-                walletStatus.style.color = '#00ff00';
-                
-                // Simulate referral link generation (now based on real connected address)
-                referralLinkDisplay.textContent = `https://anarchydollar.com/mine?ref=${userWalletPublicKey.toBase58().substring(0, 8)}`; // Use part of wallet address for referral code
-                
-                // Simulate referral bonus calculation (frontend only)
-                // In a real system, referral count would come from backend
-                setTimeout(() => {
-                    const simulatedReferrals = Math.floor(Math.random() * 5 + 1); // Simulate 1 to 5 referrals
-                    referralMultiplier = 1.0 + simulatedReferrals * REFERRAL_BONUS_PER_REFERRAL_UNIT;
-                    updateMiningRateDisplay();
-                }, 1000);
-
-                startMiningBtn.disabled = false; // Enable mining button after successful connection
-
-            } catch (error) {
-                walletStatus.textContent = `Quantum Link Failed: ${error.message || 'Connection denied/failed.'}`;
-                walletStatus.style.color = '#ff0000';
-                userWalletPublicKey = null;
-                startMiningBtn.disabled = true; // Disable mining if connection fails
-            }
-        });
     });
 
     // --- Mining Logic (Enhanced Simulation with 6-hour re-activation) ---
     startMiningBtn.addEventListener('click', () => {
-        if (!userWalletPublicKey) {
-            walletStatus.textContent = "Initiate Quantum Link first to activate mining protocols!";
+        if (!userXProfileConnected) { // Check X profile connection
+            walletStatus.textContent = "Initiate Quantum Link with X Profile first to activate mining protocols!";
             walletStatus.style.color = '#ff0000';
             return;
         }
 
-        const currentTime = performance.now();
+        const currentTime = Date.now(); // Use Date.now() for persistence across reloads (in a real app)
         if (isMining && (currentTime - lastMiningActivationTime < MINING_REACTIVATION_INTERVAL_MS)) {
             const timeLeft = MINING_REACTIVATION_INTERVAL_MS - (currentTime - lastMiningActivationTime);
             const hoursLeft = Math.ceil(timeLeft / (1000 * 60 * 60));
-            walletStatus.textContent = `Mining is already active. Reactivate in ${hoursLeft} hours.`;
-            walletStatus.style.color = '#FFA500'; // Orange for warning
+            walletStatus.textContent = `Quantum Mining is already active. Reactivate in ${hoursLeft} hours.`;
+            walletStatus.style.color = '#FFA500'; 
             return;
         }
 
         isMining = true;
-        lastMiningActivationTime = currentTime; // Record activation time
+        lastMiningActivationTime = currentTime; 
         startMiningBtn.textContent = "Quantum Mining Active...";
-        startMiningBtn.disabled = true; // Disable until re-activation needed
+        startMiningBtn.disabled = true; 
         currentMiningRate = BASE_MINING_RATE_PER_SEC * referralMultiplier;
         miningRateDisplay.textContent = `${currentMiningRate.toFixed(7)} aUSD/sec`;
         
         const miningInterval = setInterval(() => {
-            const newMined = currentMiningRate * 1; // Mined per second
+            const newMined = currentMiningRate * 1; 
             minedAmount += newMined;
             totalMinedDisplay.textContent = `${minedAmount.toFixed(7)} aUSD`;
 
-            // Check if 6 hours passed for re-activation
-            if (performance.now() - lastMiningActivationTime >= MINING_REACTIVATION_INTERVAL_MS) {
+            if (Date.now() - lastMiningActivationTime >= MINING_REACTIVATION_INTERVAL_MS) {
                 clearInterval(miningInterval);
                 isMining = false;
                 startMiningBtn.textContent = "Reactivate Mining (Click to continue)";
-                startMiningBtn.disabled = false; // Enable for re-activation
+                startMiningBtn.disabled = false; 
                 walletStatus.textContent = "Quantum Mining requires re-activation!";
-                walletStatus.style.color = '#FFFF00'; // Yellow for alert
+                walletStatus.style.color = '#FFFF00'; 
             }
-        }, 1000); // Update every second
+        }, 1000); 
     });
 
     // --- IDO Buy Logic (Real Transaction Simulation) ---
@@ -285,9 +270,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (!userWalletPublicKey) {
-            idoStatus.textContent = "Connect your Quantum Wallet to participate in the IDO!";
+        if (!userWalletPublicKey) { // This will now connect a Solana wallet for IDO
+            idoStatus.textContent = "Connect your Quantum Wallet (Phantom/Solflare/Backpack) to participate in the IDO!";
             idoStatus.style.color = '#ff0000';
+            // Trigger connection for Solana wallets here if not already connected
+            // For now, we'll assume a Solana wallet is needed for this.
             return;
         }
 
@@ -295,36 +282,31 @@ document.addEventListener('DOMContentLoaded', () => {
         idoStatus.style.color = '#00ffff';
 
         try {
-            // Assume payment in SOL. Convert USD to SOL (for demo, assume 1 SOL = 1 USD).
-            // In a real scenario, you would fetch real-time SOL/USD price.
+            // Assume payment in SOL.
             const solAmount = amountUSD; 
             const lamports = solAmount * LAMPORTS_PER_SOL;
 
             const transaction = new Transaction().add(
                 SystemProgram.transfer({
-                    fromPubkey: userWalletPublicKey,
+                    fromPubkey: userWalletPublicKey, // Connected Solana wallet
                     toPubkey: MY_RECEIVING_SOL_ADDRESS, 
                     lamports: lamports,
                 })
             );
 
-            // Get latest blockhash
-            const { blockhash } = await connection.getLatestBlockhash('finalized'); // Use 'finalized' for more stable blockhash
+            const { blockhash } = await connection.getLatestBlockhash('finalized'); 
             transaction.recentBlockhash = blockhash;
             transaction.feePayer = userWalletPublicKey;
 
-            // Request signing from the connected wallet provider
-            const signedTransaction = await window.solana.signTransaction(transaction); // Assumes generic window.solana provider
+            const signedTransaction = await window.solana.signTransaction(transaction); 
             const signature = await connection.sendRawTransaction(signedTransaction.serialize());
 
-            // Confirm transaction (this can take a while in real Devnet)
             await connection.confirmTransaction(signature, 'confirmed');
 
             idoStatus.textContent = `Acquisition successful! ${amountUSD.toFixed(2)} aUSD secured. Transaction ID: ${signature.substring(0, 8)}...`;
             idoStatus.style.color = '#00ff00';
             idoAmountInput.value = '';
 
-            // Simulate aUSD being added to user's balance
             minedAmount += amountUSD;
             totalMinedDisplay.textContent = `${minedAmount.toFixed(7)} aUSD`;
 
@@ -334,38 +316,19 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("IDO Transaction Error:", error);
         }
     });
-
-    // Whitepaper Toggle Logic
-    whitepaperToggleBtns.forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent default anchor behavior
-            const targetId = button.dataset.target;
-            const targetContent = document.getElementById(targetId);
-            if (targetContent) {
-                targetContent.classList.toggle('whitepaper-hidden-content');
-                if (targetContent.classList.contains('whitepaper-hidden-content')) {
-                    button.textContent = 'Read More...';
-                } else {
-                    button.textContent = 'Read Less...';
-                }
-            }
-        });
-    });
-
-    function generateFakeReferralCode() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code = '';
-        for (let i = 0; i < 8; i++) {
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return code;
-    }
-
-    function updateMiningRateDisplay() {
-        currentMiningRate = BASE_MINING_RATE_PER_SEC * referralMultiplier;
-        miningRateDisplay.textContent = `${currentMiningRate.toFixed(7)} aUSD/sec (Referral Nexus: x${referralMultiplier.toFixed(2)})`;
-    }
-
+    
     // Initial display update
     updateMiningRateDisplay();
+
+    // Set header logo text for animation
+    const headerLogoElement = document.querySelector('.header-logo-text');
+    if (headerLogoElement) {
+        headerLogoElement.setAttribute('data-text', headerLogoElement.textContent);
+    }
+
+    // Set main logo text for animation
+    const mainLogoElement = document.querySelector('.main-logo-text');
+    if (mainLogoElement) {
+        mainLogoElement.setAttribute('data-text', mainLogoElement.textContent);
+    }
 });

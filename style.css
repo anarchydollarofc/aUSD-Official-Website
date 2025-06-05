@@ -367,7 +367,6 @@ footer p {
 }
 
 /* Mining Section Styles */
-/* Note: #mining section will be a dedicated place on the single page */
 #mining {
     padding-top: 100px; /* Ensure content is below fixed header */
     min-height: 100vh;
