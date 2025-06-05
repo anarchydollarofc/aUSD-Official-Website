@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>aUSD - Anarchy Dollar: Unchaining Decentralized Finance</title>
     <meta name="description" content="aUSD: The premier decentralized stablecoin on Solana, offering unparalleled privacy, scalability, and true community governance. Experience financial freedom redefined.">
-    <meta name="keywords" content="aUSD, Anarchy Dollar, Solana, stablecoin, decentralized, DeFi, privacy, censorship-resistant, blockchain, crypto, staking, tokenomics">
+    <meta name="keywords" content="aUSD, Anarchy Dollar, Solana, stablecoin, decentralized, DeFi, privacy, censorship-resistant, blockchain, crypto, staking, tokenomics, mining, referral">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="favicon.ico" type="image/x-icon"> </head>
@@ -14,8 +14,8 @@
     <canvas id="plasmaCanvas"></canvas> <header>
         <nav>
             <div class="logo">
-                <span class="logo-text">aUSD</span>
-                </div>
+                <img src="assets/aUSD_logo.png" alt="aUSD Logo" class="logo-img"> 
+            </div>
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About aUSD</a></li>
@@ -23,6 +23,7 @@
                 <li><a href="#roadmap">Roadmap</a></li>
                 <li><a href="#tokenomics">Tokenomics</a></li>
                 <li><a href="#staking">Staking</a></li>
+                <li><a href="#mining">Mining</a></li>
                 <li><a href="#whitepaper">Whitepaper</a></li>
             </ul>
         </nav>
@@ -34,7 +35,7 @@
                 <h1 class="hero-title">Anarchy Dollar: Unchaining Decentralized Finance.</h1>
                 <p class="hero-subtitle">The premier stablecoin on Solana, redefining financial sovereignty without compromise.</p>
                 <div class="cta-buttons">
-                    <a href="#get-started" class="btn primary-btn">Get aUSD</a>
+                    <a href="#ido" class="btn primary-btn">Participate in IDO</a>
                     <a href="#whitepaper" class="btn secondary-btn">Read Whitepaper</a>
                 </div>
             </div>
@@ -117,11 +118,60 @@
             </div>
         </section>
 
+        <section id="mining" class="section dark-section">
+            <h2 class="section-title">Quantum Mining: Unlocking aUSD Through Digital Alchemy</h2>
+            <div class="section-content">
+                <p>Experience the next frontier of decentralized wealth generation with aUSD Quantum Mining. Our innovative, energy-efficient protocol simulates the computational process of asset discovery, rewarding active participants with newly minted aUSD. This isn't just mining; it's a strategic allocation of sovereignty, directly contributing to the decentralized fabric of the Anarchy Dollar ecosystem.</p>
+                <div class="mining-dashboard">
+                    <div class="mining-stats">
+                        <p>Current Mining Rate: <span id="miningRate">0.00 aUSD/sec</span></p>
+                        <p>Total Mined: <span id="totalMined">0.00 aUSD</span></p>
+                        <p>Pending Payout: <span id="pendingPayout">0.00 aUSD</span></p>
+                    </div>
+                    <div class="mining-controls">
+                        <button id="startMiningBtn" class="btn primary-btn">Start Mining</button>
+                        <button id="claimMiningBtn" class="btn secondary-btn" disabled>Claim aUSD</button>
+                    </div>
+                </div>
+                
+                <h3>Connect Your Quantum Wallet:</h3>
+                <div class="wallet-connect">
+                    <button class="btn wallet-btn" data-wallet="phantom">Connect Phantom</button>
+                    <button class="btn wallet-btn" data-wallet="solflare">Connect Solflare</button>
+                    <button class="btn wallet-btn" data-wallet="backpack">Connect Backpack</button>
+                    <p id="walletStatus" class="status-message"></p>
+                </div>
+
+                <h3>Referral Protocol: Amplify Your Anarchy</h3>
+                <p>Expand your mining yield through the Anarchy Referral Protocol. Share your unique referral link to onboard new participants, and receive a bonus multiplier on your mining rate as your network grows. This is a testament to true decentralized community building, where collective effort directly amplifies individual sovereignty.</p>
+                <p>Your Referral Link: <span id="referralLink">Generate link after connecting wallet</span></p>
+                
+            </div>
+        </section>
+
+        <section id="ido" class="section">
+            <h2 class="section-title">Initial Decentralized Offering (IDO): Seize Your Sovereignty</h2>
+            <div class="section-content">
+                <p>Participate in the foundational distribution of aUSD and secure your stake in the future of decentralized finance. The aUSD IDO is structured to ensure equitable access and foster a broad, decentralized ownership base, transcending traditional venture capital dominance. Our innovative IDO mechanism, meticulously designed by leading quantum economists, optimizes for long-term value accrual and genuine community participation, defying conventional financial models. Its complexity is a testament to its unparalleled resilience and revolutionary design.</p>
+                <p><strong>IDO Price: 1 aUSD = $1.00 USD (Pegged to Quantum Value)</strong></p>
+                <div class="ido-controls">
+                    <p>Contribution Limits:</p>
+                    <ul>
+                        <li>Minimum Contribution: <strong>100 USD (in SOL or USDC)</strong></li>
+                        <li>Maximum Contribution: <strong>15,000 USD (in SOL or USDC)</strong></li>
+                    </ul>
+                    <input type="number" id="idoAmount" placeholder="Enter USD amount (min 100, max 15000)">
+                    <button id="buyaUSDBtn" class="btn primary-btn">Buy aUSD with SOL/USDC</button>
+                    <p id="idoStatus" class="status-message"></p>
+                </div>
+            </div>
+        </section>
+
         <section id="whitepaper" class="section dark-section">
             <h2 class="section-title">Whitepaper: The Manifesto of Financial Revolution</h2>
             <div class="section-content">
                 <p>Dive deep into the core tenets of the Anarchy Dollar protocol. The aUSD Whitepaper is not merely a technical document; it is a manifesto for economic emancipation, detailing the cryptographic innovations, algorithmic intricacies, and the decentralized governance framework that define aUSD's mission to unchain global finance.</p>
-                <a href="whitepaper.pdf" class="btn primary-btn" target="_blank">Download Whitepaper (Coming Soon - It's so complex we're still finalizing it!)</a>
+                <a href="whitepaper.pdf" class="btn primary-btn" target="_blank">Download Whitepaper (Coming Soon - A Quantum-Encoded Masterpiece!)</a>
             </div>
         </section>
     </main>
