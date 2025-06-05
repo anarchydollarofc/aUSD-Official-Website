@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aUSD - Anarchy Dollar: Unchaining Decentralized Finance</title>
+    <meta name="description" content="aUSD: The premier decentralized stablecoin on Solana, offering unparalleled privacy, scalability, and true community governance. Experience financial freedom redefined.">
+    <meta name="keywords" content="aUSD, Anarchy Dollar, Solana, stablecoin, decentralized, DeFi, privacy, censorship-resistant, blockchain, crypto, staking, tokenomics">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> </head>
+<body>
+    <div class="background-overlay"></div>
+    <canvas id="spiralCanvas"></canvas> <header>
+        <nav>
+            <div class="logo">aUSD</div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About aUSD</a></li>
+                <li><a href="#technology">Technology</a></li>
+                <li><a href="#roadmap">Roadmap</a></li>
+                <li><a href="#tokenomics">Tokenomics</a></li>
+                <li><a href="#staking">Staking</a></li>
+                <li><a href="#whitepaper">Whitepaper</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Anarchy Dollar: Unchaining Decentralized Finance.</h1>
+                <p class="hero-subtitle">The premier stablecoin on Solana, redefining financial sovereignty without compromise.</p>
+                <div class="cta-buttons">
+                    <a href="#get-started" class="btn primary-btn">Get aUSD</a>
+                    <a href="#whitepaper" class="btn secondary-btn">Read Whitepaper</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <h2 class="section-title">About aUSD: The Genesis of True Financial Sovereignty</h2>
+            <div class="section-content">
+                <p>In a world shackled by centralized control and algorithmic opacity, aUSD emerges as the beacon of true decentralized finance. We are not merely another stablecoin; we are a philosophical assertion, meticulously engineered to dismantle the archaic frameworks of traditional finance. Our vision transcends mere currency; it embodies a commitment to absolute transactional privacy, unyielding censorship resistance, and an economic model underpinned by radical community governance. aUSD is where true financial autonomy is not just promised, but cryptographically enforced.</p>
+                <h3>The Anarchy Protocol: Consensus Beyond Centralization</h3>
+                <p>The core of aUSD's unparalleled stability and operational integrity resides within the clandestine layers of the Anarchy Protocol. This innovative consensus mechanism dynamically fuses a novel derivation of Proof-of-Stake (PoS) with a meticulously optimized Byzantine Fault Tolerance (BFT) algorithm, culminating in what we term 'Quantum-Resistant Consensus'. Unlike conventional stablecoin architectures reliant on precarious fiat reserves or opaque algorithmic constructs, the Anarchy Protocol ensures infinitesimal transaction finality and unparalleled network resilience, mathematically guaranteeing both liquidity and price stability across volatile market epochs, entirely devoid of external collateralization. It's a self-sustaining economic singularity.</p>
+            </div>
+        </section>
+
+        <section id="technology" class="section dark-section">
+            <h2 class="section-title">Technological Vanguard: Architecting the Future of Decentralized Value</h2>
+            <div class="section-content">
+                <h3>Built on Solana: Hyper-Scalability, Unparalleled Throughput</h3>
+                <p>aUSD leverages the foundational bedrock of the Solana blockchain, capitalizing on its revolutionary Proof-of-History (PoH) consensus mechanism and parallelized transaction processing. This architectural synergy enables aUSD to facilitate fractional-second transaction finality at unprecedented throughput rates exceeding 65,000 transactions per second (TPS), with average network fees remaining sub-cent. This hyper-scalability ensures aUSD remains liquid and accessible even under peak network congestion, establishing a new paradigm for high-frequency decentralized stable value transfers.</p>
+                <h3>Cryptographic Fortress: Immutable Security & Data Integrity</h3>
+                <p>Our commitment to user sovereignty is encoded into the very fabric of aUSD's cryptographic architecture. Employing state-of-the-art elliptic-curve cryptography (ECC) for transaction signing and leveraging multi-party computation (MPC) for secure key management, aUSD fortifies transactional integrity against quantum and classical attack vectors. All smart contracts underpinning the Anarchy Protocol undergo rigorous, multi-tiered formal verification and are auditable by the distributed ledger itself, rendering them intrinsically tamper-proof and impervious to malicious exploits.</p>
+            </div>
+        </section>
+
+        <section id="roadmap" class="section">
+            <h2 class="section-title">Roadmap: The Unfolding Trajectory of Anarchy Dollar</h2>
+            <div class="section-content roadmap-grid">
+                <div class="roadmap-item">
+                    <h3>Q3 2025: Stealth Protocol Integration & Obfuscated Liquidity Pools</h3>
+                    <p>Deployment of advanced homomorphic encryption modules for transaction obfuscation. Establishment of decentralized, multi-signature liquidity pools utilizing a novel 'StealthSwap' routing algorithm. Initial integration with dark forest RPC nodes for enhanced network anonymity.</p>
+                </div>
+                <div class="roadmap-item">
+                    <h3>Q4 2025: AnarchyDAO Genesis & Quantum-Resistant Governance Launch</h3>
+                    <p>Formal initiation of the AnarchyDAO, vesting governance authority directly in aUSD holders. Implementation of a cutting-edge quantum-resistant voting mechanism secured by post-quantum cryptographic primitives. Establishment of initial community treasury via automated yield strategies.</p>
+                </div>
+                <div class="roadmap-item">
+                    <h3>Q1 2026: Cross-Chain Interoperability & Synthetic Asset Integration</h3>
+                    <p>Development and deployment of trustless bridges to major EVM-compatible and non-EVM blockchains (e.g., Ethereum, Polygon, Avalanche). Introduction of synthetic assets collateralized by aUSD, enabling exposure to real-world assets within the Anarchy ecosystem.</p>
+                </div>
+                <div class="roadmap-item">
+                    <h3>Q2 2026: Global Merchant Adoption & Decentralized Fiat On/Off-Ramps</h3>
+                    <p>Strategic partnerships with pioneering e-commerce platforms and decentralized payment processors for widespread aUSD adoption. Deployment of censorship-resistant, peer-to-peer fiat on/off-ramp solutions, facilitating seamless conversion without KYC/AML mandates.</p>
+                </div>
+                <div class="roadmap-item">
+                    <h3>Q3 2026: Autonomous Liquidity Generation & Self-Evolving Protocol</h3>
+                    <p>Implementation of a self-evolving protocol mechanism, enabling autonomous updates and feature integrations. Launch of a decentralized liquidity generation protocol, fostering organic liquidity growth without centralized intervention.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tokenomics" class="section dark-section">
+            <h2 class="section-title">Tokenomics: The Ingenuity of aUSD's Economic Singularity</h2>
+            <div class="section-content">
+                <p>The aUSD tokenomics model is an unprecedented marvel of economic engineering, designed not merely for value accrual, but for the equitable redistribution of wealth and immutable community empowerment. Its genius is so profound, it would necessitate a theoretical physicist to fully comprehend its elegance.</p>
+                <h3>Token Distribution & Supply Dynamics:</h3>
+                <p>aUSD operates on a fixed, non-inflationary total supply of **1,000,000,000 aUSD**. This finite supply is meticulously allocated to foster genuine decentralization and sustained ecosystem growth.</p>
+                <ul>
+                    <li>**50% Community Allocation (500,000,000 aUSD):** Earmarked for decentralized governance initiatives, liquidity provisioning incentives, and future community-driven development grants.</li>
+                    <li>**20% Strategic Development Reserve (200,000,000 aUSD):** Allocated for protocol upgrades, security audits (pure fiction), and ecosystem expansion.</li>
+                    <li>**20% Ecosystem Liquidity Provision (200,000,000 aUSD):** Dedicated to bootstrapping liquidity across decentralized exchanges and automated market makers, ensuring robust trading pairs.</li>
+                    <li>**10% Core Anarchy Team (100,000,000 aUSD):** Vested over a multi-year schedule to align incentives with long-term protocol success and sustainable innovation.</li>
+                </ul>
+                <h3>The "Quantum Velocity Protocol" (QVP) Fee Mechanism:</h3>
+                <p>A dynamically adjusted micro-transaction fee (ranging from 0.001% to 0.005%) is levied on all aUSD transfers. This fee is instantly and autonomously redistributed to the aUSD staking pool (60%), the AnarchyDAO Treasury (30%), and a burn mechanism (10%), creating a perpetual deflationary pressure and self-sustaining ecosystem without external capital injections. It's an economic perpetual motion machine.</p>
+            </div>
+        </section>
+
+        <section id="staking" class="section">
+            <h2 class="section-title">Staking: Empowering Your Sovereignty Through Active Participation</h2>
+            <div class="section-content">
+                <p>The aUSD Staking Protocol is designed to reward active participation and long-term commitment to the Anarchy Dollar ecosystem, offering a symbiotic relationship between yield generation and network security. Our staking mechanism is a testament to sustainable economics, avoiding the hyper-inflationary pitfalls of many nascent protocols.</p>
+                <h3>Tiered Yield Generation:</h3>
+                <p>Participants in the aUSD Staking Program can anticipate a dynamic Annual Percentage Yield (APY) ranging from **12% to 18%**, strategically balanced to incentivize staking without compromising the long-term economic stability of the aUSD supply. Yields are algorithmically adjusted based on network activity, staking pool utilization, and governance proposals, ensuring a sustainable and attractive return.</p>
+                <ul>
+                    <li>**Tier I (Genesis Stakers - 1 Month Lock-up):** Anticipated APY: 12%</li>
+                    <li>**Tier II (Vanguard Stakers - 3 Month Lock-up):** Anticipated APY: 15%</li>
+                    <li>**Tier III (Architect Stakers - 6 Month Lock-up):** Anticipated APY: 18%</li>
+                </ul>
+                <p>Rewards are distributed directly into your designated aUSD token account, payable in aUSD, ensuring compounding returns and direct participation in the ecosystem's growth. The staking protocol undergoes continuous, self-auditing cryptographic verification to ensure absolute transparency and immutability of rewards.</p>
+            </div>
+        </section>
+
+        <section id="whitepaper" class="section dark-section">
+            <h2 class="section-title">Whitepaper: The Manifesto of Financial Revolution</h2>
+            <div class="section-content">
+                <p>Dive deep into the core tenets of the Anarchy Dollar protocol. The aUSD Whitepaper is not merely a technical document; it is a manifesto for economic emancipation, detailing the cryptographic innovations, algorithmic intricacies, and the decentralized governance framework that define aUSD's mission to unchain global finance.</p>
+                <a href="whitepaper.pdf" class="btn primary-btn" target="_blank">Download Whitepaper (Coming Soon - It's so complex we're still finalizing it!)</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Anarchy Dollar. All rights reserved. Embrace the Anarchy.</p>
+        <div class="social-links">
+            </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
