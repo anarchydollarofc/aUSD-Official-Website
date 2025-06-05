@@ -41,7 +41,7 @@ canvas#quantumPlasmaCanvas { /* Renamed ID to avoid conflict and reflect new eff
 /* Header & Navigation */
 header {
     background-color: rgba(13, 13, 26, 0.8); /* Slightly transparent dark background */
-    padding: 1rem 0;
+    padding: 0.8rem 0; /* Reduced padding */
     position: fixed;
     width: 100%;
     top: 0;
@@ -61,24 +61,51 @@ nav {
 }
 
 .logo-link {
-    display: block; /* Make the whole logo area clickable */
+    display: flex; /* Use flex to align text logo */
+    align-items: center;
     text-decoration: none;
+    height: 60px; /* Define height for the logo container */
+    overflow: hidden; /* Hide overflow from text-shadow animation */
 }
 
-.header-logo {
-    /* This div will hold the aUSD logo using background-image for styling */
-    width: 120px; /* Adjust size for the image logo */
-    height: 60px; /* Adjust size for the image logo */
-    background-image: url('assets/aUSD_logo.png'); /* You will need to create this image and put it in an 'assets' folder */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.7)) drop-shadow(0 0 30px rgba(255, 0, 255, 0.5)); /* Neon glow for the image */
-    transition: filter 0.3s ease;
+.header-logo-text {
+    font-family: 'Orbitron', sans-serif; /* Futuristic font for navigation */
+    font-size: 2.2rem; /* Larger text logo */
+    font-weight: bold;
+    letter-spacing: 0.15em; /* More spacing */
+    background: linear-gradient(45deg, #8a2be2, #00ffff); /* Purple to Cyan gradient for the text */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-out; /* Smooth transition on hover */
 }
 
-.header-logo:hover {
-    filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.9)) drop-shadow(0 0 40px rgba(255, 0, 255, 0.7));
+.header-logo-text::before {
+    content: attr(data-text); /* Use data-text attribute for clone effect */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #00ffff, #8a2be2); /* Inverted gradient for glow */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: blur(5px); /* Glow effect */
+    opacity: 0.8;
+    z-index: -1; /* Behind main text */
+    animation: neon-glow 1.5s ease-in-out infinite alternate; /* Subtle breathing glow */
+}
+
+@keyframes neon-glow {
+    from {
+        text-shadow: 0 0 10px rgba(138, 43, 226, 0.7), 0 0 20px rgba(0, 255, 255, 0.5);
+        transform: scale(1);
+    }
+    to {
+        text-shadow: 0 0 15px rgba(138, 43, 226, 1), 0 0 25px rgba(0, 255, 255, 0.8);
+        transform: scale(1.02);
+    }
 }
 
 
@@ -88,7 +115,7 @@ nav ul {
 }
 
 nav ul li {
-    margin-left: 2rem;
+    margin-left: 1.5rem; /* Reduced spacing */
 }
 
 nav ul li a {
@@ -98,17 +125,19 @@ nav ul li a {
     font-size: 0.95rem;
     padding: 0.5rem 0;
     transition: color 0.3s ease, text-shadow 0.3s ease;
-    font-family: 'Orbitron', sans-serif; /* Futuristic font for navigation */
+    font-family: 'Electrolize', sans-serif; /* More digital font for navigation */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 nav ul li a:hover {
-    color: #9932cc; /* Darker purple on hover */
-    text-shadow: 0 0 8px #9932cc, 0 0 15px #9932cc;
+    color: #00ffff; /* Cyan on hover */
+    text-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff;
 }
 
 /* Main Content Sections */
 main {
-    padding-top: 80px; /* Offset for fixed header */
+    padding-top: 100px; /* Offset for fixed header */
 }
 
 .section {
@@ -116,7 +145,7 @@ main {
     margin: 4rem auto;
     padding: 3rem 2rem;
     background-color: rgba(20, 0, 40, 0.7); /* Slightly lighter purple background */
-    border-radius: 10px;
+    border-radius: 10px; /* Rounded corners */
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
     text-align: center;
     border: 1px solid rgba(138, 43, 226, 0.3); /* Subtle purple border */
@@ -149,10 +178,10 @@ main {
 .section-content h3 {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.6rem;
-    color: #8a2be2;
+    color: #00ffff; /* Cyan for subheadings */
     margin-top: 2rem;
     margin-bottom: 1rem;
-    text-shadow: 0 0 8px #8a2be2;
+    text-shadow: 0 0 8px #00ffff;
     text-align: left; /* Align subheadings to left */
     text-transform: uppercase;
 }
@@ -165,7 +194,7 @@ main {
 }
 
 .section-content ul li {
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%238a2be2"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>') no-repeat left center;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%2300ffff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>') no-repeat left center; /* Cyan checkmark */
     background-size: 1.2rem;
     padding-left: 1.8rem;
     margin-bottom: 0.8rem;
@@ -188,79 +217,88 @@ main {
     overflow: hidden; /* Hide overflow from cursor effect */
 }
 
-.hero-title {
-    /* Removed from here, moved to background image or dynamic logo */
-    display: none; /* Hide the text title */
+/* Main logo container (for hero section) */
+.main-logo-text { /* Replaced main-logo-container with text for dynamic glowing logo */
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8rem; /* Large size for main logo */
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    background: linear-gradient(45deg, #8a2be2, #00ffff); /* Purple to Cyan gradient */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-out;
+    animation: main-logo-glow 2s ease-in-out infinite alternate; /* Subtle breathing glow for main logo */
+    text-shadow: 0 0 30px rgba(138, 43, 226, 0.7), 0 0 60px rgba(0, 255, 255, 0.5); /* Initial glow */
 }
 
-/* Main logo (for hero section) */
-.main-logo {
-    width: 500px; /* Adjust size as needed */
-    height: 250px; /* Adjust size as needed */
-    background-image: url('assets/aUSD_logo_full.png'); /* You will need to create this image and put it in an 'assets' folder */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    filter: drop-shadow(0 0 30px rgba(138, 43, 226, 0.9)) drop-shadow(0 0 60px rgba(255, 0, 255, 0.7)); /* Intense neon glow */
-    margin-bottom: 2rem;
-    transition: filter 0.5s ease;
-}
-
-.main-logo:hover {
-    filter: drop-shadow(0 0 40px rgba(138, 43, 226, 1)) drop-shadow(0 0 80px rgba(255, 0, 255, 0.9));
+@keyframes main-logo-glow {
+    from {
+        transform: scale(1);
+        text-shadow: 0 0 30px rgba(138, 43, 226, 0.7), 0 0 60px rgba(0, 255, 255, 0.5);
+    }
+    to {
+        transform: scale(1.03);
+        text-shadow: 0 0 40px rgba(138, 43, 226, 1), 0 0 80px rgba(0, 255, 255, 0.8);
+    }
 }
 
 
 .hero-subtitle {
-    font-size: 1.5rem;
-    color: #d0bfff; /* Lighter purple */
-    margin-bottom: 2.5rem;
-    max-width: 800px;
+    font-size: 1.6rem; /* Slightly larger */
+    color: #00ffff; /* Cyan for hero subtitle */
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    margin-bottom: 3rem; /* More spacing */
+    max-width: 900px; /* Wider text */
     margin-left: auto;
     margin-right: auto;
     font-family: 'Electrolize', sans-serif; /* Digital font */
+    letter-spacing: 0.02em;
 }
 
 .cta-buttons .btn {
     display: inline-block;
-    padding: 0.9rem 2.2rem;
-    margin: 0 1rem;
+    padding: 1.1rem 2.5rem; /* Larger buttons */
+    margin: 0 1.5rem;
     border: 2px solid;
-    border-radius: 5px;
+    border-radius: 8px; /* Rounded corners for buttons */
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     transition: all 0.3s ease;
     text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif; /* Futuristic font for CTA */
+    letter-spacing: 0.05em;
 }
 
 .btn.primary-btn {
     background-color: #8a2be2; /* Electric purple */
     color: #fff;
     border-color: #8a2be2;
-    box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.6);
 }
 
 .btn.primary-btn:hover {
     background-color: #9932cc; /* Darker purple */
     border-color: #9932cc;
-    box-shadow: 0 0 25px rgba(153, 50, 204, 0.7);
-    transform: translateY(-3px);
+    box-shadow: 0 0 30px rgba(153, 50, 204, 0.8);
+    transform: translateY(-5px) scale(1.02); /* More dynamic hover */
 }
 
 .btn.secondary-btn {
     background-color: transparent;
     color: #00ffff; /* Cyan for secondary to match digital feel */
     border-color: #00ffff;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
 }
 
 .btn.secondary-btn:hover {
-    background-color: rgba(0, 255, 255, 0.1);
+    background-color: rgba(0, 255, 255, 0.15); /* More visible hover */
     color: #fff;
     border-color: #fff;
-    transform: translateY(-3px);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+    transform: translateY(-5px) scale(1.02); /* More dynamic hover */
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
 }
 
 /* Roadmap Grid */
@@ -281,20 +319,21 @@ main {
 }
 
 .roadmap-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+    transform: translateY(-8px); /* More pronounced lift */
+    box-shadow: 0 10px 30px rgba(138, 43, 226, 0.6); /* Stronger shadow */
 }
 
 .roadmap-item h3 {
-    font-size: 1.4rem;
+    font-size: 1.5rem; /* Slightly larger */
     color: #00ffff; /* Cyan for roadmap headers */
-    text-shadow: 0 0 8px #00ffff;
-    margin-bottom: 0.8rem;
+    text-shadow: 0 0 10px #00ffff; /* Stronger glow */
+    margin-bottom: 1rem;
     text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif;
 }
 
 .roadmap-item p {
-    font-size: 1rem;
+    font-size: 1.05rem; /* Slightly larger */
     color: #a0a0a0;
     font-family: 'Electrolize', sans-serif;
 }
@@ -304,10 +343,10 @@ footer {
     background-color: #05050f;
     color: #777;
     text-align: center;
-    padding: 2rem 0;
-    font-size: 0.9rem;
-    margin-top: 4rem;
-    border-top: 1px solid rgba(138, 43, 226, 0.1);
+    padding: 2.5rem 0; /* More padding */
+    font-size: 0.95rem;
+    margin-top: 5rem; /* More spacing */
+    border-top: 1px solid rgba(138, 43, 226, 0.15);
     font-family: 'Electrolize', sans-serif;
 }
 
@@ -317,91 +356,132 @@ footer p {
 
 .social-links a {
     color: #d0bfff;
-    font-size: 1.5rem;
-    margin: 0 0.8rem;
-    transition: color 0.3s ease;
+    font-size: 1.8rem; /* Larger icons */
+    margin: 0 1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .social-links a:hover {
-    color: #8a2be2;
+    color: #00ffff; /* Cyan on hover */
+    transform: translateY(-3px);
 }
 
 /* Mining Section Styles */
+/* Note: #mining section will be a dedicated place on the single page */
 #mining {
-    /* Removed from main page, will be a separate HTML file or dynamic load */
-    display: none; /* Hide by default, will be loaded or navigated to */
+    padding-top: 100px; /* Ensure content is below fixed header */
+    min-height: 100vh;
 }
 
 .mining-dashboard, .wallet-connect, .ido-controls {
     background-color: rgba(40, 0, 80, 0.7);
-    padding: 2rem;
-    border-radius: 8px;
-    margin-top: 2rem;
+    padding: 2.5rem; /* More padding */
+    border-radius: 10px; /* Slightly larger radius */
+    margin-top: 2.5rem;
     border: 1px solid rgba(153, 50, 204, 0.5);
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+    text-align: left; /* Align content inside to left */
 }
 
 .mining-stats p, .ido-controls p, .status-message, .ido-limit-info {
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.3rem; /* Slightly larger stats */
     color: #00ffff; /* Cyan for stats */
-    margin-bottom: 0.8rem;
-    text-shadow: 0 0 5px #00ffff;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 8px #00ffff; /* Stronger glow */
 }
 
 #miningRate, #totalMined, #pendingPayout, #referralLink {
     color: #ff00ff; /* Magenta for actual values */
     font-weight: bold;
+    text-shadow: 0 0 10px #ff00ff; /* Added glow to values */
 }
 
 .mining-controls button, .wallet-connect button, .ido-controls button {
-    margin-top: 1rem;
-    margin-right: 1rem;
+    margin-top: 1.5rem;
+    margin-right: 1.5rem;
+    padding: 1rem 2rem; /* Larger buttons */
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    border-radius: 8px; /* Rounded buttons */
 }
 
 .wallet-btn {
     background-color: #5d359b; /* Slightly different purple for wallet buttons */
     border-color: #5d359b;
     color: #fff;
-    font-family: 'Orbitron', sans-serif;
-    text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(93, 53, 155, 0.5);
 }
 .wallet-btn:hover {
     background-color: #6a40a5;
     border-color: #6a40a5;
+    box-shadow: 0 0 20px rgba(93, 53, 155, 0.7);
 }
 
 input[type="number"] {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6); /* Darker input background */
     border: 1px solid #8a2be2;
-    padding: 0.8rem;
+    padding: 1rem; /* More padding */
     border-radius: 5px;
     color: #00ffff;
-    font-size: 1rem;
+    font-size: 1.1rem; /* Larger font in input */
     width: 100%;
-    max-width: 300px;
-    margin-top: 1rem;
+    max-width: 350px; /* Wider input */
+    margin-top: 1.5rem;
     text-align: center;
     font-family: 'Electrolize', sans-serif;
+    box-shadow: inset 0 0 8px rgba(138, 43, 226, 0.3);
 }
 input[type="number"]::placeholder {
     color: #a0a0a0;
 }
 .status-message {
-    font-size: 1rem;
+    font-size: 1.1rem; /* Slightly larger status message */
     color: #00ffff; /* Cyan for status messages */
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     font-family: 'Electrolize', sans-serif;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
 }
 
 .ido-limit-info {
-    font-size: 1.1rem;
+    font-size: 1.2rem; /* Larger limit info */
     color: #d0bfff; /* Lighter purple for important info */
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem; /* More spacing */
     font-family: 'Electrolize', sans-serif;
+    text-align: center; /* Center align for better visibility */
+}
+.ido-limit-info .limit-value {
+    color: #ff00ff; /* Magenta for the actual limit values */
+    text-shadow: 0 0 8px #ff00ff;
 }
 
 /* Whitepaper section adjustments */
+.whitepaper-content .read-more-toggle {
+    display: block; /* Make it a block element */
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #00ffff; /* Cyan for toggle */
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+.whitepaper-content .read-more-toggle:hover {
+    color: #bf40bf; /* Pinkish purple on hover */
+    text-shadow: 0 0 5px #bf40bf;
+}
+.whitepaper-hidden-content {
+    display: none; /* Hidden by default */
+}
+.whitepaper-hidden-content p {
+    margin-top: 1rem;
+}
+.whitepaper-hidden-content ul {
+    margin-top: 0.5rem;
+}
+
 #whitepaper .btn {
     background-color: #00ffff; /* Cyan button for whitepaper */
     border-color: #00ffff;
@@ -412,4 +492,38 @@ input[type="number"]::placeholder {
     background-color: #00e0e0;
     border-color: #00e0e0;
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+    }
+    nav ul {
+        margin-top: 1rem;
+    }
+    nav ul li {
+        margin: 0 0.8rem;
+    }
+    .hero-title {
+        font-size: 3rem;
+    }
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    .section-title {
+        font-size: 2rem;
+    }
+    .cta-buttons .btn {
+        display: block;
+        margin: 1rem auto;
+    }
+    .main-logo-text { /* Adjusted for mobile */
+        font-size: 4rem;
+        width: 100%;
+        height: auto;
+    }
+    .mining-dashboard, .wallet-connect, .ido-controls {
+        padding: 1.5rem;
+    }
 }
