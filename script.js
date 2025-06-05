@@ -4,11 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let particles = [];
-    const maxParticles = 700;
-    let isMouseMoving = false;
-    let mouseMoveTimer;
-    let lastPulseTime = 0;
-    const pulseInterval = 1500;
+    const maxParticles = 700; // Mantido o número máximo de partículas, mas elas terão vida curta
     let currentTrailPoint = { x: mouseX, y: mouseY };
 
     // Set canvas size on load and resize
@@ -27,12 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isOverClickable) {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            isMouseMoving = true;
-            clearTimeout(mouseMoveTimer);
-            mouseMoveTimer = setTimeout(() => {
-                isMouseMoving = false;
-                lastPulseTime = performance.now();
-            }, 150);
             canvas.style.cursor = 'none'; // Hide default cursor outside clickable areas
         } else {
             canvas.style.cursor = 'pointer'; // Show pointer cursor for clickable elements
@@ -40,17 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     class Particle {
-        constructor(x, y, color, speedMultiplier = 1) {
+        constructor(x, y, color) {
             this.x = x;
             this.y = y;
-            this.baseSize = Math.random() * 2 + 1; // Partículas maiores, mais visíveis
+            this.baseSize = Math.random() * 0.8 + 0.3; // Partículas bem pequenas
             this.size = this.baseSize;
             this.color = color;
-            this.speedX = (Math.random() - 0.5) * 8 * speedMultiplier; // Mais rápidas e caóticas
-            this.speedY = (Math.random() - 0.5) * 8 * speedMultiplier;
+            this.speedX = (Math.random() - 0.5) * 4; // Velocidade moderada para as faíscas
+            this.speedY = (Math.random() - 0.5) * 4;
             this.alpha = 1;
             this.life = 0;
-            this.maxLife = Math.random() * 100 + 80; // Vivem mais tempo, rastro mais denso
+            this.maxLife = Math.random() * 20 + 10; // Vida muito curta para sumirem rápido
         }
 
         update() {
@@ -59,10 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.alpha -= 1 / this.maxLife;
             this.size = this.baseSize * (this.alpha > 0 ? this.alpha : 0);
             this.life++;
-            if (Math.random() < 0.1) { // Aumenta a chance de mudança de direção
-                this.speedX += (Math.random() - 0.5) * 2;
-                this.speedY += (Math.random() - 0.5) * 2;
-            }
         }
 
         draw() {
@@ -76,59 +62,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animateQuantumPlasma() {
-        ctx.fillStyle = 'rgba(13, 13, 26, 0.02)'; // Ainda mais opaco, pra dar aquele rastro "cyberpunk"
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Limpa o canvas completamente a cada frame para evitar qualquer rastro
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        const timeFactor = performance.now() * 0.0002; // Cor mudando mais lentamente, pra dar mais tempo de apreciar
-        // Hues para o gradiente:
-        // Roxo escuro/roxo-azulado: Aprox. 270 (como base no seu CSS, 8a2be2 é um roxo-azulado)
-        // Azul claro neon/ciano: Aprox. 180 (como base no seu CSS, 00ffff é ciano)
-        const startHue = 270; // HSL hue para um roxo mais profundo
-        const endHue = 180;   // HSL hue para o azul neon ciano
+        // Opcional: Adiciona um fundo sutil se quiser que o plasma de fundo ainda esteja presente
+        // Mas sem interferir no rastro do cursor. Se o background-overlay e o quantumPlasmaCanvas
+        // já cuidam do fundo, essa linha pode ser removida ou ter alpha muito baixo.
+        // ctx.fillStyle = 'rgba(13, 13, 26, 0.005)'; // Quase invisível, para uma limpeza suave
+        // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+        // Ajusta a posição do ponto atual do rastro para seguir o mouse de forma suave
+        currentTrailPoint.x += (mouseX - currentTrailPoint.x) * 0.2;
+        currentTrailPoint.y += (mouseY - currentTrailPoint.y) * 0.2;
+
+        // Gera a cor em degradê roxo-azul neon
+        const timeFactor = performance.now() * 0.0002;
+        const startHue = 270; // HSL hue para um roxo (como #8a2be2)
+        const endHue = 180;   // HSL hue para um ciano/azul neon (como #00ffff)
         const hueRange = endHue - startHue;
-        const currentHue = startHue + (Math.sin(timeFactor) + 1) / 2 * hueRange; // Mapeia seno para a faixa de cores
+        const currentHue = startHue + (Math.sin(timeFactor) + 1) / 2 * hueRange;
+        const color = `hsl(${currentHue}, 100%, 75%)`; // Saturação e brilho altos para efeito neon
 
-        const color = `hsl(${currentHue}, 100%, 75%)`; // Saturação e brilho no máximo, pra gritar "NEON!"
-
-        currentTrailPoint.x += (mouseX - currentTrailPoint.x) * 0.3; // Segue o mouse mais de perto, mais responsivo
-        currentTrailPoint.y += (mouseY - currentTrailPoint.y) * 0.3;
-
-        // Desenha a linha grossa na "cabeça" do cursor
+        // Desenha a linha fina e contínua que segue o cursor
         ctx.strokeStyle = color;
-        ctx.lineWidth = 10; // A linha mais grossa ainda, pra impactar!
+        ctx.lineWidth = 3; // Linha fina
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(currentTrailPoint.x, currentTrailPoint.y);
-        ctx.lineTo(currentTrailPoint.x - (mouseX - currentTrailPoint.x) * 0.1, currentTrailPoint.y - (mouseY - currentTrailPoint.y) * 0.1);
+        // Usa a posição do mouse diretamente para criar uma linha que aponta para o cursor
+        ctx.lineTo(mouseX, mouseY);
         ctx.stroke();
 
-        // Gera mais partículas por frame, pra densidade total
-        for (let i = 0; i < 20; i++) { // Botei pra gerar mais partículas, pra ficar denso pra caralho!
+        // Geração de micro choques (faíscas)
+        // Geramos poucas partículas por frame para que sejam mínimas
+        for (let i = 0; i < 2; i++) { // Apenas 2 faíscas por frame para sutileza
             const offsetAngle = Math.random() * Math.PI * 2;
-            const offsetDist = Math.random() * 40; // Espalha mais, pra um efeito maior
+            const offsetDist = Math.random() * 10; // Espalhamento bem pequeno ao redor da linha
             const px = currentTrailPoint.x + Math.cos(offsetAngle) * offsetDist;
             const py = currentTrailPoint.y + Math.sin(offsetAngle) * offsetDist;
-            particles.push(new Particle(px, py, color, isMouseMoving ? 6 : 4)); // Partículas mais rápidas em ambos os estados
-        }
-
-        if (!isMouseMoving) {
-            const pulseRadius = 70 + Math.sin((performance.now() - lastPulseTime) * 0.003) * 60; // Pulso ainda maior e mais impactante
-            const pulseAngle = (performance.now() - lastPulseTime) * 0.012; // Pulso girando mais rápido
-
-            const x = mouseX + Math.cos(pulseAngle) * pulseRadius;
-            const y = mouseY + Math.sin(pulseAngle) * pulseRadius;
-            particles.push(new Particle(x, y, color, 2.5)); // Partículas do pulso mais rápidas
+            particles.push(new Particle(px, py, color));
         }
         
+        // Atualiza e desenha as partículas (faíscas)
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
             particles[i].draw();
+            // Remove partículas mortas
             if (particles[i].alpha <= 0) {
                 particles.splice(i, 1);
                 i--;
             }
         }
 
+        // Garante que o número de partículas não exceda o limite, removendo as mais antigas
         if (particles.length > maxParticles) {
             particles.splice(0, particles.length - maxParticles);
         }
@@ -139,7 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
     animateQuantumPlasma();
 
     // --- Wallet / X Integration and Mining Logic ---
-    // (O resto do seu script.js continua igual, só mexi no efeito visual mesmo!)
+    // (O restante do seu script.js permanece inalterado a partir daqui)
+
     const miningRateDisplay = document.getElementById('miningRate');
     const totalMinedDisplay = document.getElementById('totalMined');
     const startMiningBtn = document.getElementById('startMiningBtn');
@@ -290,7 +278,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("IDO Transaction Error:", error);
         }
     });
-    // A função updateMiningRateDisplay não está definida no seu código atual,
-    // então a chamada a ela foi removida para evitar erros.
-    // updateMiningRateDisplay(); 
 });
