@@ -130,11 +130,13 @@
                 <p class="mining-status-text">Connect your X profile to begin your Quantum Mining journey.</p>
                 <div class="wallet-connect">
                     <button class="btn wallet-btn" id="connectXBtn" data-wallet="x">Connect X Profile</button>
-                    <p id="walletStatus" class="status-message"></p>
-                </div>
+                    <p id="xProfileStatus" class="status-message"></p> </div>
                 
                 <div class="mining-dashboard">
-                    <p class="user-profile-display"><span id="xUsernameDisplay"></span></p>
+                    <div class="user-profile-info">
+                        <img id="xProfilePic" class="x-profile-pic" src="https://via.placeholder.com/40" alt="X Profile Pic"> 
+                        <span id="xUsernameDisplay" class="x-username"></span>
+                    </div>
                     <div class="mining-stats">
                         <p>Current Mining Rate: <span id="miningRate">0.0000000 aUSD/sec</span></p>
                         <p>Total Mined: <span id="totalMined">0.0000000 aUSD</span></p>
@@ -158,9 +160,9 @@
                 <p class="ido-limit-info">Contribution Limits: Minimum <strong class="limit-value">100 USD</strong>, Maximum <strong class="limit-value">15,000 USD</strong> (in SOL or USDC)</p>
                 <div class="ido-controls">
                     <input type="number" id="idoAmount" placeholder="Enter USD amount">
-                    <button id="buyaUSDBtn" class="btn primary-btn">Buy aUSD with SOL/USDC</button>
+                    <button class="btn wallet-btn" id="connectWalletForIDOBtn" data-wallet-type="solana">Connect Wallet for IDO</button> <button id="buyaUSDBtn" class="btn primary-btn" disabled>Buy aUSD with SOL/USDC</button>
                     <p id="idoStatus" class="status-message"></p>
-                </div>
+                    <p id="idoWalletStatus" class="status-message"></p> </div>
             </div>
         </section>
 
@@ -172,7 +174,7 @@
                 
                 <div class="whitepaper-sections" id="whitepaperSections">
                     <h3>1. Introduction: The Crisis of Centralized Value</h3>
-                    <p>The prevailing global financial infrastructure, characterized by centralized control and opaque monetary policies, inherently undermines individual economic autonomy. Traditional stablecoins, tethered to unstable fiat reserves or susceptible to algorithmic vulnerabilities, perpetuate this systemic fragility. aUSD emerges as a radical counter-narrative, offering a cryptographically secured alternative that rede fines stability through decentralized consensus and community-driven immutability. Our protocol addresses the critical need for a truly censorship-resistant and privately transactable digital medium of exchange.</p>
+                    <p>The prevailing global financial infrastructure, characterized by centralized control and opaque monetary policies, inherently undermines individual economic autonomy. Traditional stablecoins, tethered to unstable fiat reserves or susceptible to algorithmic vulnerabilities, perpetuate this systemic fragility. aUSD emerges as a radical counter-narrative, offering a cryptographically secured alternative that redefines stability through decentralized consensus and community-driven immutability. Our protocol addresses the critical need for a truly censorship-resistant and privately transactable digital medium of exchange.</p>
                     <div id="whitepaperSection1" class="whitepaper-expandable-content">
                         <p><strong>1.1 The Fiat Delusion:</strong> Global fiat currencies are subject to inflationary pressures and geopolitical manipulation, eroding purchasing power and fostering economic instability. The illusion of stability is maintained through centralized entities wielding unchecked power.</p>
                         <p><strong>1.2 Algorithmic Precarity:</strong> Prior attempts at algorithmic stablecoins often succumbed to market volatility, revealing fundamental design flaws in their pseudo-decentralized constructs. Their reliance on external market dynamics for stability proved inherently unsustainable.</p>
@@ -201,7 +203,7 @@
                     </div>
 
                     <h3>4. Staking: The Nexus of Sovereignty and Yield</h3>
-                    <p>The aUSD Staking Protocol is designed to reward active participation and long-term commitment to the Anarchy Dollar ecosystem, offering a symbiotic relationship between yield generation and network security. Our staking mechanism is a testament to sustainable economics, avoiding the hyper-inflationary pitfalls of many nascent protocols.</p>
+                    <p>The aUSD Staking Protocol transcends conventional yield generation, offering a symbiotic relationship between active participation and network security. Our tiered yield structure rewards long-term commitment and contributes to protocol stability.</p>
                     <div id="whitepaperSection4" class="whitepaper-expandable-content">
                         <p><strong>4.1 Dynamic APY Generation:</strong> Participants can earn 12% to 18% APY, algorithmically adjusted based on network activity and staking pool utilization. This ensures sustainable and attractive returns without compromising tokenomics.</p>
                         <p><strong>4.2 Tiered Participation:</strong> Incentivizing commitment, higher APYs are awarded for longer lock-up periods:</p>

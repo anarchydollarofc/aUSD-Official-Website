@@ -1,334 +1,515 @@
-import { Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { getAssociatedTokenAddress, createTransferInstruction, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
+/* Basic Reset & Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('quantumPlasmaCanvas');
-    const ctx = canvas.getContext('2d');
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let particles = [];
-    const maxParticles = 700; // Increased for more density and smoother trails
-    let isMouseMoving = false;
-    let mouseMoveTimer;
-    let lastPulseTime = 0;
-    const pulseInterval = 1500; 
-    let currentTrailPoint = { x: mouseX, y: mouseY }; 
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #0d0d1a; /* Very dark background */
+    color: #e0e0e0; /* Light gray for text */
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scroll due to canvas */
+    position: relative; /* For absolute positioning of canvas */
+    cursor: none; /* Hide default cursor to use custom one */
+}
 
-    // Set canvas size on load and resize
-    const setCanvasSize = () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    };
-    setCanvasSize(); 
-    window.addEventListener('resize', setCanvasSize);
+/* Background Overlay for subtle gradient */
+.background-overlay {
+    position: fixed; /* Changed to fixed for full viewport coverage */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(30, 0, 60, 0.5) 0%, rgba(0, 0, 0, 0.9) 100%);
+    z-index: -2;
+}
 
-    // Mouse movement listener
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        isMouseMoving = true;
-        clearTimeout(mouseMoveTimer);
-        mouseMoveTimer = setTimeout(() => {
-            isMouseMoving = false;
-            lastPulseTime = performance.now(); 
-        }, 150); 
-    });
+/* Canvas for the dynamic plasma/spiral effect */
+canvas#quantumPlasmaCanvas { 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; 
+    pointer-events: none; /* Allow clicks to pass through */
+    background: linear-gradient(135deg, #050010 0%, #200040 50%, #050010 100%); /* Deep dark purple gradient */
+}
 
-    // Particle class for the digital lightning-like effects
-    class Particle {
-        constructor(x, y, color, speedMultiplier = 1) {
-            this.x = x;
-            this.y = y;
-            this.baseSize = Math.random() * 1.5 + 0.5;
-            this.size = this.baseSize;
-            this.color = color;
-            this.speedX = (Math.random() - 0.5) * 5 * speedMultiplier; 
-            this.speedY = (Math.random() - 0.5) * 5 * speedMultiplier; 
-            this.alpha = 1; 
-            this.life = 0;
-            this.maxLife = Math.random() * 80 + 60; 
-        }
+/* Header & Navigation */
+header {
+    background-color: rgba(13, 13, 26, 0.8); /* Slightly transparent dark background */
+    padding: 0.8rem 0; 
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px); 
+}
 
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            this.alpha -= 1 / this.maxLife; 
-            this.size = this.baseSize * (this.alpha > 0 ? this.alpha : 0); 
-            this.life++;
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
 
-            if (Math.random() < 0.07) { 
-                this.speedX += (Math.random() - 0.5) * 1.2;
-                this.speedY += (Math.random() - 0.5) * 1.2;
-            }
-        }
+.logo-link {
+    display: flex; 
+    align-items: center;
+    text-decoration: none;
+    height: 60px; 
+    overflow: hidden; 
+}
 
-        draw() {
-            ctx.globalAlpha = this.alpha;
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.globalAlpha = 1; 
-        }
+.header-logo-text {
+    font-family: 'Orbitron', sans-serif; 
+    font-size: 2.2rem; 
+    font-weight: bold;
+    letter-spacing: 0.15em; 
+    background: linear-gradient(45deg, #8a2be2, #00ffff); /* Purple to Cyan gradient for the text */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-out; 
+}
+
+.header-logo-text::before {
+    content: attr(data-text); 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #00ffff, #8a2be2); /* Inverted gradient for glow */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: blur(5px); 
+    opacity: 0.8;
+    z-index: -1; 
+    animation: neon-glow 1.5s ease-in-out infinite alternate; 
+}
+
+@keyframes neon-glow {
+    from {
+        text-shadow: 0 0 10px rgba(138, 43, 226, 0.7), 0 0 20px rgba(0, 255, 255, 0.5);
+        transform: scale(1);
     }
-
-    function animateQuantumPlasma() {
-        ctx.fillStyle = 'rgba(13, 13, 26, 0.02)'; // Even more transparent for clean trails
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        const timeFactor = performance.now() * 0.0005;
-        const baseHue = 270; 
-        const range = 120; 
-        const hue = (baseHue + Math.sin(timeFactor) * range) % 360;
-        const color = `hsl(${hue}, 95%, 70%)`; // More vibrant, neon-like
-
-        currentTrailPoint.x += (mouseX - currentTrailPoint.x) * 0.25; // Faster, smoother follow
-        currentTrailPoint.y += (mouseY - currentTrailPoint.y) * 0.25;
-
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 7; // Thicker line at the head
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(currentTrailPoint.x, currentTrailPoint.y);
-        ctx.lineTo(currentTrailPoint.x - (mouseX - currentTrailPoint.x) * 0.15, currentTrailPoint.y - (mouseY - currentTrailPoint.y) * 0.15); // Shorter, more defined segment
-        ctx.stroke();
-
-        for (let i = 0; i < 12; i++) { // Even more fine lines for denser, lightning-like effect
-            const offsetAngle = Math.random() * Math.PI * 2;
-            const offsetDist = Math.random() * 25;
-            const px = currentTrailPoint.x + Math.cos(offsetAngle) * offsetDist;
-            const py = currentTrailPoint.y + Math.sin(offsetAngle) * offsetDist;
-            particles.push(new Particle(px, py, color, isMouseMoving ? 4 : 2)); // Even faster, more spread when moving
-        }
-
-        if (!isMouseMoving) {
-            const pulseRadius = 50 + Math.sin((performance.now() - lastPulseTime) * 0.005) * 40;
-            const pulseAngle = (performance.now() - lastPulseTime) * 0.008;
-
-            const x = mouseX + Math.cos(pulseAngle) * pulseRadius;
-            const y = mouseY + Math.sin(pulseAngle) * pulseRadius;
-            particles.push(new Particle(x, y, color, 1.5)); 
-        }
-        
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw();
-            if (particles[i].alpha <= 0) {
-                particles.splice(i, 1);
-                i--;
-            }
-        }
-
-        if (particles.length > maxParticles) {
-            particles.splice(0, particles.length - maxParticles);
-        }
-
-        requestAnimationFrame(animateQuantumPlasma);
+    to {
+        text-shadow: 0 0 15px rgba(138, 43, 226, 1), 0 0 25px rgba(0, 255, 255, 0.8);
+        transform: scale(1.02);
     }
+}
 
-    animateQuantumPlasma();
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 1.5rem; 
+}
+
+nav ul li a {
+    color: #e0e0e0;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    font-family: 'Electrolize', sans-serif; 
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+nav ul li a:hover {
+    color: #00ffff; 
+    text-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff;
+}
+
+/* Main Content Sections */
+main {
+    padding-top: 100px; 
+}
+
+.section {
+    max-width: 1000px;
+    margin: 4rem auto;
+    padding: 3rem 2rem;
+    background-color: rgba(20, 0, 40, 0.7); 
+    border-radius: 10px; 
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    border: 1px solid rgba(138, 43, 226, 0.3); 
+    position: relative; 
+    overflow: hidden; 
+}
+
+.dark-section {
+    background-color: rgba(10, 0, 30, 0.8); 
+    border: 1px solid rgba(153, 50, 204, 0.4);
+}
+
+.section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    color: #bf40bf; 
+    margin-bottom: 2rem;
+    text-shadow: 0 0 15px #bf40bf, 0 0 25px #bf40bf;
+    text-transform: uppercase; 
+}
+
+.section-content p {
+    font-family: 'Electrolize', sans-serif; 
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: #c0c0c0;
+    text-align: justify; 
+}
+
+.section-content h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    color: #00ffff; 
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 8px #00ffff;
+    text-align: left; 
+    text-transform: uppercase;
+}
+
+.section-content ul {
+    list-style: none; 
+    padding-left: 0;
+    text-align: left;
+    margin-top: 1.5rem;
+}
+
+.section-content ul li {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%2300ffff"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>') no-repeat left center; 
+    background-size: 1.2rem;
+    padding-left: 1.8rem;
+    margin-bottom: 0.8rem;
+    color: #b0b0b0;
+    font-size: 1rem;
+    font-family: 'Electrolize', sans-serif;
+}
 
 
-    // --- Wallet / X Integration and Mining Logic ---
-    const MY_RECEIVING_SOL_ADDRESS = new PublicKey("nxLHh8p2azzBJeuZCCRqSWoDA4h9ipGq6XumLVwmdYB"); // Your actual Solflare main wallet address (where SOL/USDC will go)
-    const aUSD_MINT_ADDRESS_DEVNET = new PublicKey("57Xmt89NZHqf8zLFkPmQPu9KetsosEhzef3R2DUpSCjX"); // Your aUSD Token Mint Address
+/* Hero Section Specifics */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 2rem;
+    position: relative;
+    overflow: hidden; 
+}
 
-    const connection = new Connection("https://api.devnet.solana.com", 'confirmed');
+.main-logo-text { 
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8rem; 
+    font-weight: bold;
+    letter-spacing: 0.15em; 
+    background: linear-gradient(45deg, #8a2be2, #00ffff); 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-out;
+    animation: main-logo-glow 2s ease-in-out infinite alternate; 
+    text-shadow: 0 0 30px rgba(138, 43, 226, 0.7), 0 0 60px rgba(0, 255, 255, 0.5); 
+}
 
-    const miningRateDisplay = document.getElementById('miningRate');
-    const totalMinedDisplay = document.getElementById('totalMined');
-    const startMiningBtn = document.getElementById('startMiningBtn');
-    const connectXBtn = document.getElementById('connectXBtn'); // ID for Connect X Profile button
-    const walletStatus = document.getElementById('walletStatus');
-    const referralLinkDisplay = document.getElementById('referralLink');
-    const idoAmountInput = document.getElementById('idoAmount');
-    const buyaUSDBtn = document.getElementById('buyaUSDBtn');
-    const idoStatus = document.getElementById('idoStatus');
-    const xUsernameDisplay = document.getElementById('xUsernameDisplay'); // Element to display X username
-
-    // Whitepaper Toggle Logic
-    const whitepaperToggleAllBtn = document.getElementById('whitepaperToggleAll');
-    const whitepaperSectionsContainer = document.getElementById('whitepaperSections');
-
-    if (whitepaperToggleAllBtn) {
-        whitepaperToggleAllBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const allHiddenSections = whitepaperSectionsContainer.querySelectorAll('.whitepaper-expandable-content');
-            const isAnyHidden = Array.from(allHiddenSections).some(section => section.style.display === 'none' || section.style.display === '');
-
-            allHiddenSections.forEach(section => {
-                section.style.display = isAnyHidden ? 'block' : 'none';
-            });
-
-            whitepaperToggleAllBtn.textContent = isAnyHidden ? 'Read Less...' : 'Read Full Whitepaper';
-        });
+@keyframes main-logo-glow {
+    from {
+        transform: scale(1);
+        text-shadow: 0 0 30px rgba(138, 43, 226, 0.7), 0 0 60px rgba(0, 255, 255, 0.5);
     }
-
-    // Hide all whitepaper expandable content initially
-    whitepaperSectionsContainer.querySelectorAll('.whitepaper-expandable-content').forEach(section => {
-        section.style.display = 'none';
-    });
-
-
-    let isMining = false;
-    let minedAmount = 0; 
-    let currentMiningRate = 0; 
-    let userXProfileConnected = false; // Tracks if X profile is connected
-    let xUsername = ''; // Stores X username
-    let referralMultiplier = 1.0; 
-    let lastMiningActivationTime = 0;
-    const MINING_REACTIVATION_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
-
-    const BASE_MINING_RATE_PER_SEC = 0.00005; 
-    const REFERRAL_BONUS_PER_REFERRAL_UNIT = 0.00001; 
-
-    // --- X (Twitter) Connection Logic (Simulated for real data) ---
-    // This is a simulation. Real X OAuth requires a backend.
-    connectXBtn.addEventListener('click', async () => {
-        walletStatus.textContent = `Initiating Quantum Link with X Profile...`;
-        walletStatus.style.color = '#00ffff';
-
-        try {
-            // Simulate OAuth flow to get username
-            const fakeUsernames = ["@QuantumAnarchist", "@CipherMaestro", "@SolanaGuru", "@DarkWebKing", "@AUSD_Rebel"];
-            const selectedUsername = fakeUsernames[Math.floor(Math.random() * fakeUsernames.length)];
-            const fakeProfilePic = "https://via.placeholder.com/40"; // Placeholder for profile pic
-
-            xUsername = selectedUsername;
-            userXProfileConnected = true;
-            
-            xUsernameDisplay.innerHTML = `<img src="${fakeProfilePic}" alt="${xUsername} Profile Pic" class="x-profile-pic"> ${xUsername}`;
-            walletStatus.textContent = `Quantum Link Established! Connected to X as ${xUsername}.`;
-            walletStatus.style.color = '#00ff00';
-            
-            // Simulate referral link generation
-            referralLinkDisplay.textContent = `https://anarchydollar.com/mine?ref=${xUsername.replace('@', '')}`; // Use X username for referral code
-            
-            // Simulate referral bonus calculation (frontend only)
-            setTimeout(() => {
-                const simulatedReferrals = Math.floor(Math.random() * 5 + 1); 
-                referralMultiplier = 1.0 + simulatedReferrals * REFERRAL_BONUS_PER_REFERRAL_UNIT;
-                updateMiningRateDisplay();
-            }, 1000);
-
-            startMiningBtn.disabled = false; 
-
-        } catch (error) {
-            walletStatus.textContent = `Quantum Link Failed: ${error.message || 'Connection denied/failed.'}`;
-            walletStatus.style.color = '#ff0000';
-            userXProfileConnected = false;
-            startMiningBtn.disabled = true; 
-        }
-    });
-
-    // --- Mining Logic (Enhanced Simulation with 6-hour re-activation) ---
-    startMiningBtn.addEventListener('click', () => {
-        if (!userXProfileConnected) { // Check X profile connection
-            walletStatus.textContent = "Initiate Quantum Link with X Profile first to activate mining protocols!";
-            walletStatus.style.color = '#ff0000';
-            return;
-        }
-
-        const currentTime = Date.now(); // Use Date.now() for persistence across reloads (in a real app)
-        if (isMining && (currentTime - lastMiningActivationTime < MINING_REACTIVATION_INTERVAL_MS)) {
-            const timeLeft = MINING_REACTIVATION_INTERVAL_MS - (currentTime - lastMiningActivationTime);
-            const hoursLeft = Math.ceil(timeLeft / (1000 * 60 * 60));
-            walletStatus.textContent = `Quantum Mining is already active. Reactivate in ${hoursLeft} hours.`;
-            walletStatus.style.color = '#FFA500'; 
-            return;
-        }
-
-        isMining = true;
-        lastMiningActivationTime = currentTime; 
-        startMiningBtn.textContent = "Quantum Mining Active...";
-        startMiningBtn.disabled = true; 
-        currentMiningRate = BASE_MINING_RATE_PER_SEC * referralMultiplier;
-        miningRateDisplay.textContent = `${currentMiningRate.toFixed(7)} aUSD/sec`;
-        
-        const miningInterval = setInterval(() => {
-            const newMined = currentMiningRate * 1; 
-            minedAmount += newMined;
-            totalMinedDisplay.textContent = `${minedAmount.toFixed(7)} aUSD`;
-
-            if (Date.now() - lastMiningActivationTime >= MINING_REACTIVATION_INTERVAL_MS) {
-                clearInterval(miningInterval);
-                isMining = false;
-                startMiningBtn.textContent = "Reactivate Mining (Click to continue)";
-                startMiningBtn.disabled = false; 
-                walletStatus.textContent = "Quantum Mining requires re-activation!";
-                walletStatus.style.color = '#FFFF00'; 
-            }
-        }, 1000); 
-    });
-
-    // --- IDO Buy Logic (Real Transaction Simulation) ---
-    buyaUSDBtn.addEventListener('click', async () => {
-        const amountUSD = parseFloat(idoAmountInput.value);
-        if (isNaN(amountUSD) || amountUSD < 100 || amountUSD > 15000) {
-            idoStatus.textContent = "Invalid contribution. Limits: Minimum 100 USD, Maximum 15,000 USD.";
-            idoStatus.style.color = '#ff0000';
-            return;
-        }
-
-        if (!userWalletPublicKey) { // This will now connect a Solana wallet for IDO
-            idoStatus.textContent = "Connect your Quantum Wallet (Phantom/Solflare/Backpack) to participate in the IDO!";
-            idoStatus.style.color = '#ff0000';
-            // Trigger connection for Solana wallets here if not already connected
-            // For now, we'll assume a Solana wallet is needed for this.
-            return;
-        }
-
-        idoStatus.textContent = `Initiating Quantum Acquisition for ${amountUSD.toFixed(2)} aUSD... (Awaiting wallet approval)`;
-        idoStatus.style.color = '#00ffff';
-
-        try {
-            // Assume payment in SOL.
-            const solAmount = amountUSD; 
-            const lamports = solAmount * LAMPORTS_PER_SOL;
-
-            const transaction = new Transaction().add(
-                SystemProgram.transfer({
-                    fromPubkey: userWalletPublicKey, // Connected Solana wallet
-                    toPubkey: MY_RECEIVING_SOL_ADDRESS, 
-                    lamports: lamports,
-                })
-            );
-
-            const { blockhash } = await connection.getLatestBlockhash('finalized'); 
-            transaction.recentBlockhash = blockhash;
-            transaction.feePayer = userWalletPublicKey;
-
-            const signedTransaction = await window.solana.signTransaction(transaction); 
-            const signature = await connection.sendRawTransaction(signedTransaction.serialize());
-
-            await connection.confirmTransaction(signature, 'confirmed');
-
-            idoStatus.textContent = `Acquisition successful! ${amountUSD.toFixed(2)} aUSD secured. Transaction ID: ${signature.substring(0, 8)}...`;
-            idoStatus.style.color = '#00ff00';
-            idoAmountInput.value = '';
-
-            minedAmount += amountUSD;
-            totalMinedDisplay.textContent = `${minedAmount.toFixed(7)} aUSD`;
-
-        } catch (error) {
-            idoStatus.textContent = `Quantum Acquisition Failed: ${error.message || 'Transaction denied/failed.'}`;
-            idoStatus.style.color = '#ff0000';
-            console.error("IDO Transaction Error:", error);
-        }
-    });
-    
-    // Initial display update
-    updateMiningRateDisplay();
-
-    // Set header logo text for animation
-    const headerLogoElement = document.querySelector('.header-logo-text');
-    if (headerLogoElement) {
-        headerLogoElement.setAttribute('data-text', headerLogoElement.textContent);
+    to {
+        transform: scale(1.03);
+        text-shadow: 0 0 40px rgba(138, 43, 226, 1), 0 0 80px rgba(0, 255, 255, 0.8);
     }
+}
 
-    // Set main logo text for animation
-    const mainLogoElement = document.querySelector('.main-logo-text');
-    if (mainLogoElement) {
-        mainLogoElement.setAttribute('data-text', mainLogoElement.textContent);
+
+.hero-subtitle {
+    font-size: 1.6rem; 
+    color: #00ffff; 
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    margin-bottom: 3rem; 
+    max-width: 900px; 
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Electrolize', sans-serif; 
+    letter-spacing: 0.02em;
+}
+
+.cta-buttons .btn {
+    display: inline-block;
+    padding: 1.1rem 2.5rem; 
+    margin: 0 1.5rem;
+    border: 2px solid;
+    border-radius: 8px; 
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif; 
+    letter-spacing: 0.05em;
+}
+
+.btn.primary-btn {
+    background-color: #8a2be2; 
+    color: #fff;
+    border-color: #8a2be2;
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.6);
+}
+
+.btn.primary-btn:hover {
+    background-color: #9932cc; 
+    border-color: #9932cc;
+    box-shadow: 0 0 30px rgba(153, 50, 204, 0.8);
+    transform: translateY(-5px) scale(1.02); 
+}
+
+.btn.secondary-btn {
+    background-color: transparent;
+    color: #00ffff; 
+    border-color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
+
+.btn.secondary-btn:hover {
+    background-color: rgba(0, 255, 255, 0.15); 
+    color: #fff;
+    border-color: #fff;
+    transform: translateY(-5px) scale(1.02); 
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+}
+
+/* Roadmap Grid */
+.roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    text-align: left;
+}
+
+.roadmap-item {
+    background-color: rgba(30, 0, 60, 0.6);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(138, 43, 226, 0.2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.roadmap-item:hover {
+    transform: translateY(-8px); 
+    box-shadow: 0 10px 30px rgba(138, 43, 226, 0.6); 
+}
+
+.roadmap-item h3 {
+    font-size: 1.5rem; 
+    color: #00ffff; 
+    text-shadow: 0 0 10px #00ffff; 
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.roadmap-item p {
+    font-size: 1.05rem; 
+    color: #a0a0a0;
+    font-family: 'Electrolize', sans-serif;
+}
+
+/* Footer */
+footer {
+    background-color: #05050f;
+    color: #777;
+    text-align: center;
+    padding: 2.5rem 0; 
+    font-size: 0.95rem;
+    margin-top: 5rem; 
+    border-top: 1px solid rgba(138, 43, 226, 0.15);
+    font-family: 'Electrolize', sans-serif;
+}
+
+footer p {
+    margin-bottom: 1rem;
+}
+
+.social-links a {
+    color: #d0bfff;
+    font-size: 1.8rem; 
+    margin: 0 1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #00ffff; 
+    transform: translateY(-3px);
+}
+
+/* Mining Section Styles */
+#mining {
+    padding-top: 100px; 
+    min-height: 100vh;
+}
+
+.mining-dashboard, .wallet-connect, .ido-controls {
+    background-color: rgba(40, 0, 80, 0.7);
+    padding: 2.5rem; 
+    border-radius: 10px; 
+    margin-top: 2.5rem;
+    border: 1px solid rgba(153, 50, 204, 0.5);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); 
+    text-align: left; 
+}
+
+.mining-stats p, .ido-controls p, .status-message, .ido-limit-info {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem; 
+    color: #00ffff; 
+    margin-bottom: 1rem;
+    text-shadow: 0 0 8px #00ffff; 
+}
+
+#miningRate, #totalMined, #pendingPayout, #referralLink {
+    color: #ff00ff; 
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff00ff; 
+}
+
+.mining-controls button, .wallet-connect button, .ido-controls button {
+    margin-top: 1.5rem;
+    margin-right: 1.5rem;
+    padding: 1rem 2rem; 
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    border-radius: 8px; 
+}
+
+.wallet-btn {
+    background-color: #5d359b; 
+    border-color: #5d359b;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(93, 53, 155, 0.5);
+}
+.wallet-btn:hover {
+    background-color: #6a40a5;
+    border-color: #6a40a5;
+    box-shadow: 0 0 20px rgba(93, 53, 155, 0.7);
+}
+
+input[type="number"] {
+    background-color: rgba(0, 0, 0, 0.6); 
+    border: 1px solid #8a2be2;
+    padding: 1rem; 
+    border-radius: 5px;
+    color: #00ffff;
+    font-size: 1.1rem; 
+    width: 100%;
+    max-width: 350px; 
+    margin-top: 1.5rem;
+    text-align: center;
+    font-family: 'Electrolize', sans-serif;
+    box-shadow: inset 0 0 8px rgba(138, 43, 226, 0.3);
+}
+input[type="number"]::placeholder {
+    color: #a0a0a0;
+}
+.status-message {
+    font-size: 1.1rem; 
+    color: #00ffff; 
+    margin-top: 1.5rem;
+    font-family: 'Electrolize', sans-serif;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.ido-limit-info {
+    font-size: 1.2rem; 
+    color: #d0bfff; 
+    margin-bottom: 2rem; 
+    font-family: 'Electrolize', sans-serif;
+    text-align: center; 
+}
+.ido-limit-info .limit-value {
+    color: #ff00ff; 
+    text-shadow: 0 0 8px #ff00ff;
+}
+
+/* Whitepaper section adjustments */
+.whitepaper-content .read-more-toggle {
+    display: none; /* Hide toggle buttons as per request */
+}
+.whitepaper-expandable-content { 
+    display: block !important; /* Force content to be visible */
+}
+.whitepaper-expandable-content p {
+    margin-top: 1rem;
+}
+.whitepaper-expandable-content ul {
+    margin-top: 0.5rem;
+}
+
+#whitepaper .btn {
+    background-color: #00ffff; 
+    border-color: #00ffff;
+    color: #0d0d1a; 
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+#whitepaper .btn:hover {
+    background-color: #00e0e0;
+    border-color: #00e0e0;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
     }
-});
+    nav ul {
+        margin-top: 1rem;
+    }
+    nav ul li {
+        margin: 0 0.8rem;
+    }
+    .hero-title {
+        font-size: 3rem;
+    }
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    .section-title {
+        font-size: 2rem;
+    }
+    .cta-buttons .btn {
+        display: block;
+        margin: 1rem auto;
+    }
+    .main-logo-text { 
+        font-size: 4rem;
+        width: 100%;
+        height: auto;
+    }
+    .mining-dashboard, .wallet-connect, .ido-controls {
+        padding: 1.5rem;
+    }
+}
