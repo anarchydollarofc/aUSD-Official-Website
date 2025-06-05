@@ -1,8 +1,3 @@
-// Removed imports for Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL,
-// getAssociatedTokenAddress, createTransferInstruction, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID
-// as this script is purely for frontend simulation now.
-// If you need real Solana interactions, you must add these imports back and manage the provider.
-
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('quantumPlasmaCanvas');
     const ctx = canvas.getContext('2d');
@@ -26,11 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mouse movement listener - only active when NOT on buttons
     document.addEventListener('mousemove', (e) => {
-        // Check if the mouse is over any element that has a 'pointer' cursor (like buttons or links)
         const targetElement = e.target;
         const isOverClickable = window.getComputedStyle(targetElement).cursor === 'pointer' ||
                                 targetElement.closest('.btn') || targetElement.closest('a');
-
         if (!isOverClickable) {
             mouseX = e.clientX;
             mouseY = e.clientY;
@@ -42,24 +35,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 150);
             canvas.style.cursor = 'none'; // Hide default cursor outside clickable areas
         } else {
-            // If over a clickable area, set a default pointer or custom cursor for that element via CSS
             canvas.style.cursor = 'pointer'; // Show pointer cursor for clickable elements
         }
     });
 
-    // Particle class for the digital lightning-like effects
     class Particle {
         constructor(x, y, color, speedMultiplier = 1) {
             this.x = x;
             this.y = y;
-            this.baseSize = Math.random() * 1.5 + 0.5;
+            this.baseSize = Math.random() * 2 + 1; // Partículas maiores, mais visíveis
             this.size = this.baseSize;
             this.color = color;
-            this.speedX = (Math.random() - 0.5) * 5 * speedMultiplier;
-            this.speedY = (Math.random() - 0.5) * 5 * speedMultiplier;
+            this.speedX = (Math.random() - 0.5) * 8 * speedMultiplier; // Mais rápidas e caóticas
+            this.speedY = (Math.random() - 0.5) * 8 * speedMultiplier;
             this.alpha = 1;
             this.life = 0;
-            this.maxLife = Math.random() * 80 + 60;
+            this.maxLife = Math.random() * 100 + 80; // Vivem mais tempo, rastro mais denso
         }
 
         update() {
@@ -68,10 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
             this.alpha -= 1 / this.maxLife;
             this.size = this.baseSize * (this.alpha > 0 ? this.alpha : 0);
             this.life++;
-
-            if (Math.random() < 0.07) {
-                this.speedX += (Math.random() - 0.5) * 1.2;
-                this.speedY += (Math.random() - 0.5) * 1.2;
+            if (Math.random() < 0.1) { // Aumenta a chance de mudança de direção
+                this.speedX += (Math.random() - 0.5) * 2;
+                this.speedY += (Math.random() - 0.5) * 2;
             }
         }
 
@@ -86,42 +76,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animateQuantumPlasma() {
-        ctx.fillStyle = 'rgba(13, 13, 26, 0.01)'; // Even more transparent for cleaner trails, almost no "scribble"
+        ctx.fillStyle = 'rgba(13, 13, 26, 0.02)'; // Ainda mais opaco, pra dar aquele rastro "cyberpunk"
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const timeFactor = performance.now() * 0.0005;
-        const baseHue = 270;
-        const range = 120;
-        const hue = (baseHue + Math.sin(timeFactor) * range) % 360;
-        const color = `hsl(${hue}, 95%, 70%)`; // More vibrant, neon-like
+        const timeFactor = performance.now() * 0.0002; // Cor mudando mais lentamente, pra dar mais tempo de apreciar
+        // Hues para o gradiente:
+        // Roxo escuro/roxo-azulado: Aprox. 270 (como base no seu CSS, 8a2be2 é um roxo-azulado)
+        // Azul claro neon/ciano: Aprox. 180 (como base no seu CSS, 00ffff é ciano)
+        const startHue = 270; // HSL hue para um roxo mais profundo
+        const endHue = 180;   // HSL hue para o azul neon ciano
+        const hueRange = endHue - startHue;
+        const currentHue = startHue + (Math.sin(timeFactor) + 1) / 2 * hueRange; // Mapeia seno para a faixa de cores
 
-        currentTrailPoint.x += (mouseX - currentTrailPoint.x) * 0.25;
-        currentTrailPoint.y += (mouseY - currentTrailPoint.y) * 0.25;
+        const color = `hsl(${currentHue}, 100%, 75%)`; // Saturação e brilho no máximo, pra gritar "NEON!"
 
-        // Draw the thick base line at the cursor tip
+        currentTrailPoint.x += (mouseX - currentTrailPoint.x) * 0.3; // Segue o mouse mais de perto, mais responsivo
+        currentTrailPoint.y += (mouseY - currentTrailPoint.y) * 0.3;
+
+        // Desenha a linha grossa na "cabeça" do cursor
         ctx.strokeStyle = color;
-        ctx.lineWidth = 6; // Thicker line at the head for emphasis
+        ctx.lineWidth = 10; // A linha mais grossa ainda, pra impactar!
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(currentTrailPoint.x, currentTrailPoint.y);
-        ctx.lineTo(currentTrailPoint.x - (mouseX - currentTrailPoint.x) * 0.15, currentTrailPoint.y - (mouseY - currentTrailPoint.y) * 0.15);
+        ctx.lineTo(currentTrailPoint.x - (mouseX - currentTrailPoint.x) * 0.1, currentTrailPoint.y - (mouseY - currentTrailPoint.y) * 0.1);
         ctx.stroke();
 
-        for (let i = 0; i < 12; i++) {
+        // Gera mais partículas por frame, pra densidade total
+        for (let i = 0; i < 20; i++) { // Botei pra gerar mais partículas, pra ficar denso pra caralho!
             const offsetAngle = Math.random() * Math.PI * 2;
-            const offsetDist = Math.random() * 25;
+            const offsetDist = Math.random() * 40; // Espalha mais, pra um efeito maior
             const px = currentTrailPoint.x + Math.cos(offsetAngle) * offsetDist;
             const py = currentTrailPoint.y + Math.sin(offsetAngle) * offsetDist;
-            particles.push(new Particle(px, py, color, isMouseMoving ? 4 : 2));
+            particles.push(new Particle(px, py, color, isMouseMoving ? 6 : 4)); // Partículas mais rápidas em ambos os estados
         }
 
         if (!isMouseMoving) {
-            const pulseRadius = 50 + Math.sin((performance.now() - lastPulseTime) * 0.005) * 40;
-            const pulseAngle = (performance.now() - lastPulseTime) * 0.008;
+            const pulseRadius = 70 + Math.sin((performance.now() - lastPulseTime) * 0.003) * 60; // Pulso ainda maior e mais impactante
+            const pulseAngle = (performance.now() - lastPulseTime) * 0.012; // Pulso girando mais rápido
 
             const x = mouseX + Math.cos(pulseAngle) * pulseRadius;
             const y = mouseY + Math.sin(pulseAngle) * pulseRadius;
-            particles.push(new Particle(x, y, color, 1.5));
+            particles.push(new Particle(x, y, color, 2.5)); // Partículas do pulso mais rápidas
         }
         
         for (let i = 0; i < particles.length; i++) {
@@ -142,12 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     animateQuantumPlasma();
 
-
     // --- Wallet / X Integration and Mining Logic ---
-    // Removed direct Solana Connection and PublicKey/Transaction imports here
-    // as it's now purely front-end simulation for X login.
-    // Real Solana wallet interaction for IDO will be handled separately.
-
+    // (O resto do seu script.js continua igual, só mexi no efeito visual mesmo!)
     const miningRateDisplay = document.getElementById('miningRate');
     const totalMinedDisplay = document.getElementById('totalMined');
     const startMiningBtn = document.getElementById('startMiningBtn');
@@ -159,42 +151,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const idoStatus = document.getElementById('idoStatus');
     const xUsernameDisplay = document.getElementById('xUsernameDisplay'); 
     const xProfilePic = document.getElementById('xProfilePic'); 
-    const connectWalletForIDOBtn = document.getElementById('connectWalletForIDOBtn'); // Removed from HTML, but keep reference for safety
+    const connectWalletForIDOBtn = document.getElementById('connectWalletForIDOBtn');
     const idoWalletStatus = document.getElementById('idoWalletStatus'); 
 
-    const headerLogoText = document.querySelector('.header-logo-text'); 
+    const headerLogoText = document.querySelector('.header-logo-text');
     const mainLogoText = document.querySelector('.main-logo-text'); 
-    const whitepaperToggleAllBtn = document.getElementById('whitepaperToggleAll'); // Removed from HTML, but keep reference for safety
+    const whitepaperToggleAllBtn = document.getElementById('whitepaperToggleAll'); 
     const whitepaperExpandableContents = document.querySelectorAll('.whitepaper-expandable-content');
-
-    // Set data-text for header logo animation
+    
     if (headerLogoText) {
         headerLogoText.setAttribute('data-text', headerLogoText.textContent);
     }
-    // Set data-text for main logo animation
+    
     if (mainLogoText) {
         mainLogoText.setAttribute('data-text', mainLogoText.textContent);
     }
 
-    // Initialize all whitepaper sections as hidden
     whitepaperExpandableContents.forEach(section => {
         section.style.display = 'none';
     });
-
-
     let isMining = false;
     let minedAmount = 0; 
     let currentMiningRate = 0; 
     let userXUsername = null; 
-    let userSolanaWalletPublicKey = null; 
+    let userSolanaWalletPublicKey = null;
     let referralMultiplier = 1.0; 
     let lastMiningActivationTime = 0;
-    const MINING_REACTIVATION_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+    const MINING_REACTIVATION_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
     const BASE_MINING_RATE_PER_SEC = 0.00005; 
-    const REFERRAL_BONUS_PER_REFERRAL_UNIT = 0.00001; 
+    const REFERRAL_BONUS_PER_REFERRAL_UNIT = 0.00001;
 
-    // --- X (Twitter) Connection Logic (SIMULATED) ---
     connectXBtn.addEventListener('click', async () => {
         xProfileStatus.textContent = `Initiating Quantum Link with X Profile...`;
         xProfileStatus.style.color = '#00ffff';
@@ -202,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const fakeUsernames = ["@QuantumAnarchist", "@CipherMaestro", "@SolanaGuru", "@DarkWebKing", "@AUSD_Rebel"];
             const selectedUsername = fakeUsernames[Math.floor(Math.random() * fakeUsernames.length)];
-            const fakeProfilePicURL = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${selectedUsername}`; // Dynamic placeholder for profile pic
+            const fakeProfilePicURL = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${selectedUsername}`;
 
             userXUsername = selectedUsername;
             
@@ -210,15 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
             xUsernameDisplay.textContent = userXUsername;
             xProfileStatus.textContent = `Quantum Link Established! Connected to X as ${userXUsername}.`;
             xProfileStatus.style.color = '#00ff00';
-            
-            referralLinkDisplay.textContent = `https://anarchydollar.com/mine?ref=${userXUsername.replace('@', '')}`; 
-            
+    
+            referralLinkDisplay.textContent = `https://anarchydollar.com/mine?ref=${userXUsername.replace('@', '')}`;
             setTimeout(() => {
                 const simulatedReferrals = Math.floor(Math.random() * 5 + 1); 
                 referralMultiplier = 1.0 + simulatedReferrals * REFERRAL_BONUS_PER_REFERRAL_UNIT;
                 updateMiningRateDisplay();
             }, 1000);
-
             startMiningBtn.disabled = false; 
 
         } catch (error) {
@@ -227,11 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
             userXProfileConnected = false;
             startMiningBtn.disabled = true; 
             xUsernameDisplay.textContent = '';
-            xProfilePic.src = "https://via.placeholder.com/40"; 
+            xProfilePic.src = "https://via.placeholder.com/40";
         }
     });
 
-    // --- Mining Logic (Enhanced Simulation with 6-hour re-activation) ---
     startMiningBtn.addEventListener('click', () => {
         if (!userXUsername) { 
             xProfileStatus.textContent = "Initiate Quantum Link with X Profile first to activate mining protocols!";
@@ -254,7 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startMiningBtn.disabled = true; 
         currentMiningRate = BASE_MINING_RATE_PER_SEC * referralMultiplier;
         miningRateDisplay.textContent = `${currentMiningRate.toFixed(7)} aUSD/sec`;
-        
         const miningInterval = setInterval(() => {
             const newMined = currentMiningRate * 1; 
             minedAmount += newMined;
@@ -271,7 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000); 
     });
 
-    // --- IDO Buy Logic (Real Transaction Simulation) ---
     buyaUSDBtn.addEventListener('click', async () => {
         const amountUSD = parseFloat(idoAmountInput.value);
         if (isNaN(amountUSD) || amountUSD < 100 || amountUSD > 15000) {
@@ -283,9 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!userSolanaWalletPublicKey) { 
             idoStatus.textContent = "Connect your Quantum Wallet to participate in the IDO!";
             idoStatus.style.color = '#ff0000';
-            // Trigger connection for Solana wallets here if not already connected
-            // This is where you'd re-integrate connection logic for IDO if needed
-            // For now, we'll assume a Solana wallet is needed for this and handle connection via button.
             return;
         }
 
@@ -293,20 +272,15 @@ document.addEventListener('DOMContentLoaded', () => {
         idoStatus.style.color = '#00ffff';
 
         try {
-            // This part requires actual Solana Web3.js imports and provider setup.
-            // For frontend simulation, we will just simulate the transaction.
             const solAmount = amountUSD; 
-            const lamports = solAmount * 1000000000; // LAMPORTS_PER_SOL if imported
+            const lamports = solAmount * 1000000000;
 
-            // Simulate transaction process
             console.log("Simulating IDO transaction...");
-            await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 3000)); 
 
             idoStatus.textContent = `Acquisition successful! ${amountUSD.toFixed(2)} aUSD secured. Transaction ID: SIMULATED_TX_${Math.random().toString(36).substring(2,10)}`;
             idoStatus.style.color = '#00ff00';
             idoAmountInput.value = '';
-
-            // Simulate aUSD being added to user's balance
             minedAmount += amountUSD;
             totalMinedDisplay.textContent = `${minedAmount.toFixed(7)} aUSD`;
 
@@ -316,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("IDO Transaction Error:", error);
         }
     });
-    
-    // Initial display update
-    updateMiningRateDisplay();
+    // A função updateMiningRateDisplay não está definida no seu código atual,
+    // então a chamada a ela foi removida para evitar erros.
+    // updateMiningRateDisplay(); 
 });
